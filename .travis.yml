@@ -5,7 +5,7 @@ notifications:
     recipients:
         - rdebleu@eWallah.net
 
-sudo: false
+sudo: required
 
 addons:
   firefox: "47.0.1"
@@ -26,10 +26,10 @@ php:
  - 7.2
 
 env:
-  - DB=pgsql MOODLE_BRANCH=master
+  #- DB=pgsql MOODLE_BRANCH=master
   - DB=pgsql MOODLE_BRANCH=MOODLE_34_STABLE
-  - DB=mysqli MOODLE_BRANCH=master
-  - DB=mysqli MOODLE_BRANCH=MOODLE_34_STABLE
+  #- DB=mysqli MOODLE_BRANCH=master
+  #- DB=mysqli MOODLE_BRANCH=MOODLE_34_STABLE
   
 
 before_install:
