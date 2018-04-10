@@ -72,7 +72,7 @@ function loadMap(){
     if(document.getElementById("block_online_users_googlemap") != null){
         <?php
         $latlng = $CFG->block_online_users_map_centre_lat . "," . $CFG->block_online_users_map_centre_lng;
-        $coords = getCurrentUserLocation();
+        $coords = getcurrentuserlocations();
         if ($coords) {
             $latlng = $coords['lat'] . "," . $coords['lng'];
         }

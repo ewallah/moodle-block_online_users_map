@@ -273,30 +273,18 @@ function update_users_locations() {
                         try {
                             $DB->update_record("block_online_users_map", $boumc);
                         } catch (exception $e) {
-                            error_log(serialize($e));
+                            debugging('Warning: block_online_users_map update error ' . serialize($e), DEBUG_DEVELOPER);
                         }
                         if ($user->timezone === '99') {
                             try {
                                 $DB->set_field('user', 'timezone', $decodedresponse->timezone, ['id' => $user->id]);
                             } catch (exception $e) {
-                                error_log(serialize($e));
+                                debugging('Error: block_online_users_map update error ' . serialize($e), DEBUG_DEVELOPER);
                             }
                         }
                     } else {
                         // Failed.
-                        $boumc = new stdClass;
-                        $boumc->userid = $user->id;
-                        $boumc->lat = 0;
-                        $boumc->lng = 0;
-                        $boumc->city = $user->city;
-                        $boumc->country = $user->country;
-                        $DB->insert_record("block_online_users_map", $boumc);
-                        $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-                        $txt .= "\nLocation NOT added for\n";
-                        $country = get_string($user->country, 'countries');
-                        $name = $user->firstname . " " . $user->lastname;
-                        $txt .= $name . ": " .$user->city . " - " . $country;
-                        $txt .= "\n" . $user->lastip;
+                        $txt .= insertfail($user, $txt);
                     }
                 } else {
                     $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
@@ -307,19 +295,7 @@ function update_users_locations() {
             }
         } else {
             $txt .= "\nLocation not found due to no or invalid response";
-            $boumc = new stdClass;
-            $boumc->userid = $user->id;
-            $boumc->lat = 0;
-            $boumc->lng = 0;
-            $boumc->city = $user->city;
-            $boumc->country = $user->country;
-            $DB->insert_record("block_online_users_map", $boumc);
-            $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-            $txt .= "\nLocation NOT added for\n";
-            $country = get_string($user->country, 'countries');
-            $name = $user->firstname . " " . $user->lastname;
-            $txt .= $name . ": " .$user->city . " - " . $country;
-            $txt .= "\n" . $user->lastip;
+            $txt .= insertfail($user, $txt);
         }
         if ($txt != '' ) {
             $user = $DB->get_record('user', ['id' => 2]);
@@ -327,6 +303,24 @@ function update_users_locations() {
         }
     }
     return true;
+}
+
+function insertfail($user, $txt) {
+    global $CFG, $DB;
+    $boumc = new stdClass;
+    $boumc->userid = $user->id;
+    $boumc->lat = 0;
+    $boumc->lng = 0;
+    $boumc->city = $user->city;
+    $boumc->country = $user->country;
+    $DB->insert_record("block_online_users_map", $boumc);
+    $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
+    $txt .= "\nLocation NOT added for\n";
+    $country = get_string($user->country, 'countries');
+    $name = $user->firstname . " " . $user->lastname;
+    $txt .= $name . ": " .$user->city . " - " . $country;
+    $txt .= "\n" . $user->lastip;
+    return $txt;
 }
 
 /**
@@ -410,7 +404,7 @@ function gettimetoshowusers() {
  * @uses $CFG,$USER,$DB
  * @return Array of decimal
  */
-function getCurrentUserLocation(){
+function getcurrentuserlocations() {
     global $USER, $DB;
     $coords = [];
     $sql = "SELECT boumc.userid, boumc.lat, boumc.lng

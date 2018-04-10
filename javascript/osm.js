@@ -9,7 +9,7 @@ var popup;
 
 <?php 
     if(isset($CFG->block_online_users_map_centre_user) && $CFG->block_online_users_map_centre_user == 1){ 
-        $coords = getCurrentUserLocation();
+        $coords = getcurrentuserlocations();
         if ($coords){
 ?>
 			var lat = <?php p($coords['lat']); ?>;
