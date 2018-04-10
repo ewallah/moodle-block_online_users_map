@@ -42,7 +42,7 @@ $currentgroup = $isseparategroups ? get_and_set_current_group($COURSE, groupmode
 
 $groupmembers = "";
 $groupselect = "";
-$users = array();
+$users = [];
 
 $counter = 0;
 // Now if the block setting to show offline users to is get then add the offline users to the returned content.
@@ -79,7 +79,7 @@ if (isset($CFG->block_online_users_map_show_offline) && $CFG->block_online_users
     $sqlwithll = $select . $from . $where . $groupby . $order;
     $pcontext = $context->get_parent_context_ids(true);
 
-    if ($pusers = $DB->get_records_sql($sqlwithll, array(), 0, 250)) {
+    if ($pusers = $DB->get_records_sql($sqlwithll, [], 0, 250)) {
         // We'll just take the most recent 250 maximum.
         foreach ($pusers as $puser) {
             if ($CFG->block_online_users_map_has_names) {
@@ -130,7 +130,7 @@ $groupby = "GROUP BY u.id, u.username, u.firstname, u.lastname, u.city, u.pictur
 $sqlwithll = $select . $from . $where . $groupby . $order;
 
 $pcontext = $context->get_parent_context_ids(true);
-if ($pusers = $DB->get_records_sql($sqlwithll, array(), 0, 150)) {
+if ($pusers = $DB->get_records_sql($sqlwithll, [], 0, 150)) {
     // We'll just take the most recent 150 maximum.
     foreach ($pusers as $puser) {
         if ($CFG->block_online_users_map_has_names) {

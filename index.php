@@ -25,10 +25,10 @@ $course = get_course(1);
 $context = context_course::instance(1);
 $syscontext = context_system::instance(0);
 // TODO log.
-$PAGE->set_url(new moodle_url('/blocks/online_users_map/index.php', array('map' => $map)));
+$PAGE->set_url(new moodle_url('/blocks/online_users_map/index.php', ['map' => $map]));
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('report');
-$PAGE->requires->js(new moodle_url('https://www.google.com/jsapi', array('key' => $CFG->googlemapkey3)), true);
+$PAGE->requires->js(new moodle_url('https://www.google.com/jsapi', ['key' => $CFG->googlemapkey3]), true);
 
 $PAGE->set_title($course->shortname);
 $PAGE->set_heading($course->fullname);
@@ -37,7 +37,7 @@ echo $OUTPUT->box_start('mod_introbox', 'pageintro');
 echo html_writer::tag('h2', get_string('participants'));
 echo $OUTPUT->box_end();
 
-$rows = array();
+$rows = [];
 $char = 'GeoChart';
 $sty = 'min-width:100%;';
 $opt = "'datalessRegionColor': '#fff', 'colorAxis': {'colors': ['#B5C202', '#106B52']}, 'backgroundColor':'transparent'";
@@ -59,7 +59,7 @@ if ($cou != '') {
         $cou = strtoupper($cou);
         $sql = "SELECT city, count(1) AS cnt FROM {user}
                 WHERE city > '' AND suspended = 0 AND deleted = 0 AND country = ? GROUP BY city";
-        if ($cities = $DB->get_records_sql($sql, array($cou))) {
+        if ($cities = $DB->get_records_sql($sql, [$cou])) {
             $countrystr = addslashes_js(get_string($cou, 'countries'));
             foreach ($cities as $city) {
                 $citystr = addslashes_js(trim(preg_replace('/[0-9]+/', '', $city->city)));
@@ -101,7 +101,7 @@ if ($cou != '') {
     $cols = "{type: 'number'}, {type: 'number'}, { type: 'string', 'role': 'tooltip'}";
     $sql = "SELECT u.city, boumc.lat, boumc.lng FROM {user} u,  {block_online_users_map} boumc
             WHERE boumc.userid = u.id AND u.suspended = 0 AND u.deleted = 0 GROUP BY city";
-    if ($cities = $DB->get_records_sql($sql, array(), 0, 400)) {
+    if ($cities = $DB->get_records_sql($sql, [], 0, 400)) {
         foreach ($cities as $city) {
             $citystr = addslashes_js(trim(preg_replace('/[0-9]+/', '', $city->city)));
             $rows[] = "{c:[{v:$city->lat}, {v:$city->lng}, {v:'$citystr'}]}";
@@ -114,7 +114,7 @@ if ($cou != '') {
     $cols = "{type: 'number'}, {type: 'number'}, { type: 'string', 'role': 'tooltip'}";
     $sql = "SELECT u.city, boumc.lat, boumc.lng FROM {user} u,  {block_online_users_map} boumc
             WHERE boumc.userid = u.id AND u.suspended = 0 AND u.deleted = 0 GROUP BY city";
-    if ($cities = $DB->get_records_sql($sql, array(), 0, 400)) {
+    if ($cities = $DB->get_records_sql($sql, [], 0, 400)) {
         foreach ($cities as $city) {
             $citystr = addslashes_js(trim(preg_replace('/[0-9]+/', '', $city->city)));
             $rows[] = "{c:[{v:$city->lat}, {v:$city->lng}, {v:'$citystr'}]}";
