@@ -127,17 +127,14 @@ class provider implements
                 continue;
             }
 
-            $html = writer::with_context($context)
-                ->rewrite_pluginfile_urls([], 'block_html', 'content', null, $block->config->text);
+            $html = writer::with_context($context)->rewrite_pluginfile_urls([], 'block_html',
+                'content', null, $block->config->text);
 
             // Default to FORMAT_HTML which is what will have been used before the
             // editor was properly implemented for the block.
             $format = isset($block->config->format) ? $block->config->format : FORMAT_HTML;
 
-            $filteropt = (object) [
-                'overflowdiv' => true,
-                'noclean' => true,
-            ];
+            $filteropt = (object) ['overflowdiv' => true, 'noclean' => true];
             $html = format_text($html, $format, $filteropt);
 
             $data = helper::get_context_data($context, $user);
