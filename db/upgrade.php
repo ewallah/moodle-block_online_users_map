@@ -18,9 +18,8 @@ defined('MOODLE_INTERNAL') || die();
 
 function xmldb_block_online_users_map_upgrade($oldversion) {
 
-    global $CFG, $DB, $OUTPUT;
+    global $DB;
 
-    $dbman = $DB->get_manager();
     if ($oldversion < 2007110101) {
         // Add new config entries.
         $setting = new object();

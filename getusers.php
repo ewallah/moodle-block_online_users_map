@@ -150,4 +150,4 @@ if ($pusers = $DB->get_records_sql($sqlwithll, array(), 0, 150)) {
 }
 
 header("Content-type: text/plain");
-echo phpToJSON($users, 'online', $callback);
+echo phptojson($users, 'online', $callback);

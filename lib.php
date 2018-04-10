@@ -27,7 +27,7 @@ require_once($CFG->dirroot.'/lib/datalib.php');
 function currentuserlocation() {
     global $CFG, $USER, $DB;
     $txt = '';
-    if ($coords = $DB->get_record('block_online_users_map', array('userid' => $USER->id), 'lat, lng')) {
+    if ($coords = $DB->get_record('block_online_users_map', ['userid' => $USER->id], 'lat, lng')) {
         $txt .= 'var lat = ' . $coords->lat . ';';
         $txt .= 'var lon = ' . $coords->lng . ';';
     } else {
@@ -40,13 +40,13 @@ function currentuserlocation() {
 
 function getusercountries() {
     global $DB;
-    $arr = array();
+    $arr = [];
     $sql = "SELECT country, count(1) AS cnt FROM {user}
             WHERE country > '' AND suspended = 0 AND deleted = 0
             GROUP BY country";
     if ($countries = $DB->get_records_sql($sql)) {
         foreach ($countries as $country) {
-            $arr[] = array($country->country, $country->cnt, get_string($country->country, 'countries'));
+            $arr[] = [$country->country, $country->cnt, get_string($country->country, 'countries')];
         }
     }
     return json_encode($arr, JSON_HEX_APOS | JSON_NUMERIC_CHECK);
@@ -54,13 +54,13 @@ function getusercountries() {
 
 function getusercities($limit = 1500) {
     global $DB;
-    $arr = array();
+    $arr = [];
     if ($cities = $DB->get_records_sql("SELECT city, count(1) AS cnt, country FROM {user} WHERE city > '' AND suspended = 0
-                AND deleted = 0 GROUP BY city", array(), 0, $limit)) {
+                AND deleted = 0 GROUP BY city", [], 0, $limit)) {
         foreach ($cities as $city) {
             $countrystr = get_string($city->country, 'countries');
             $citystr = preg_replace('/[0-9]+/', '', $city->city);
-            $arr[] = array(trim($citystr), $city->cnt, $countrystr);
+            $arr[] = [trim($citystr), $city->cnt, $countrystr];
         }
     }
     return json_encode($arr, JSON_HEX_APOS | JSON_NUMERIC_CHECK);
@@ -68,13 +68,13 @@ function getusercities($limit = 1500) {
 
 function getcountrycities($country = 'NL') {
     global $DB;
-    $arr = array();
+    $arr = [];
     if ($cities = $DB->get_records_sql("SELECT city, count(1) AS cnt FROM {user} WHERE city > '' AND suspended = 0
-                AND deleted = 0 AND country = ? GROUP BY city", array($country))) {
+                AND deleted = 0 AND country = ? GROUP BY city", [$country])) {
         $countrystr = get_string($country, 'countries');
         foreach ($cities as $city) {
             $citystr = preg_replace('/[0-9]+/', '', $city->city);
-            $arr[] = array($citystr, $city->cnt, $countrystr);
+            $arr[] = [$citystr, $city->cnt, $countrystr];
         }
     }
     return json_encode($arr, JSON_HEX_APOS | JSON_NUMERIC_CHECK);
@@ -82,14 +82,14 @@ function getcountrycities($country = 'NL') {
 
 function getuserlocations($limit = 1500) {
     global $DB;
-    $arr = array();
-    $arr[] = array('lat', 'lon', 'City');
+    $arr = [];
+    $arr[] = ['lat', 'lon', 'City'];
     if ($users = $DB->get_records_sql("SELECT u.city, boumc.lat, boumc.lng
                                        FROM {user} u,  {block_online_users_map} boumc
                                        WHERE boumc.userid = u.id AND u.suspended = 0
-                AND u.deleted = 0 GROUP BY city", array(), 0, $limit)) {
+                AND u.deleted = 0 GROUP BY city", [], 0, $limit)) {
         foreach ($users as $user) {
-            $arr[] = array($user->lat, $user->lng, $user->city);
+            $arr[] = [$user->lat, $user->lng, $user->city];
         }
     }
     return json_encode($arr, JSON_HEX_APOS | JSON_NUMERIC_CHECK);
@@ -97,8 +97,7 @@ function getuserlocations($limit = 1500) {
 
 function gethtmlforblock() {
     return '';
-    global $CFG, $SESSION;
-    $txt = html_writer::tag('div', '', array('id' => 'block_online_users_chartdiv', 'style' => 'min-height:295px;overflow:hidden'));
+    $txt = html_writer::tag('div', '', ['id' => 'block_online_users_chartdiv', 'style' => 'min-height:295px;overflow:hidden']);
     $txt .= "<script type='text/javascript'>google.charts.setOnLoadCallback(adrawChart);";
     $txt .= "var data, options, chart;";
     $txt .= "function clickChart() {var selection = chart.getSelection(); var item = selection[0];";
@@ -113,8 +112,7 @@ function gethtmlforblock() {
     $txt .= "['#B5C202', '#106B52']}, tooltip: { isHtml: true, showColorCode: false }, backgroundColor: '#FAFAFA'};";
     $txt .= "</script>";
     return $txt;
-    $lang = isset($SESSION->lang) ? $SESSION->lang : $CFG->lang;
-    $txt = html_writer::tag('div', '', array('id' => 'block_online_users_chartdiv', 'style' => 'min-height:295px;overflow:hidden'));
+    $txt = html_writer::tag('div', '', ['id' => 'block_online_users_chartdiv', 'style' => 'min-height:295px;overflow:hidden']);
     $txt .= "<script type='text/javascript'>google.charts.setOnLoadCallback(drawMap); var options, chart, data;";
     $txt .= "function clickMap() { var selection = chart.getSelection(); var item = selection[0];";
     $txt .= "window.location.href = '/blocks/online_users_map/view.php?country=' + data.getValue(item.row, 0);};";
@@ -175,9 +173,9 @@ function update_users_locations() {
                 AND u.deleted = 0";
 
     if ($CFG->block_online_users_map_update_limit == 0) {
-        $results = $DB->get_records_sql($sql, array());
+        $results = $DB->get_records_sql($sql, []);
     } else {
-        $results = $DB->get_records_sql($sql, array(), 0, $CFG->block_online_users_map_update_limit);
+        $results = $DB->get_records_sql($sql, [], 0, $CFG->block_online_users_map_update_limit);
     }
     $txt = '';
     if (!$results) {
@@ -217,7 +215,7 @@ function update_users_locations() {
                     $txt .= "\n" . $user->lastip;
                     $names = explode(" ", $name);
                     foreach ($names as $name) {
-                        $arr = array('firstname' => $name, 'country' => $user->country);
+                        $arr = ['firstname' => $name, 'country' => $user->country];
                         if ($candidates = $DB->get_records('user', $arr, 'id, firstname, lastname')) {
                             foreach ($candidates as $candidate) {
                                 if ($candidate->id === $user->id) {
@@ -228,7 +226,7 @@ function update_users_locations() {
                                 $txt .= $candidate->firstname . " " . $candidate->lastname;
                             }
                         }
-                        $arr = array('lastname' => $name, 'country' => $user->country);
+                        $arr = ['lastname' => $name, 'country' => $user->country];
                         if ($candidates = $DB->get_records('user', $arr, 'id, firstname, lastname')) {
                             foreach ($candidates as $candidate) {
                                 if ($candidate->id === $user->id) {
@@ -248,7 +246,7 @@ function update_users_locations() {
                             $txt .= "\n" . $decodedresponse->zip;
                             $txt .= "\n" . $decodedresponse->timezone;
                             if ($user->timezone === '99') {
-                                $DB->set_field('user', 'timezone', $decodedresponse->timezone, array('id' => $user->id));
+                                $DB->set_field('user', 'timezone', $decodedresponse->timezone, ['id' => $user->id]);
                             }
                         }
                     }
@@ -279,7 +277,7 @@ function update_users_locations() {
                         }
                         if ($user->timezone === '99') {
                             try {
-                                $DB->set_field('user', 'timezone', $decodedresponse->timezone, array('id' => $user->id));
+                                $DB->set_field('user', 'timezone', $decodedresponse->timezone, ['id' => $user->id]);
                             } catch (exception $e) {
                                 error_log(serialize($e));
                             }
@@ -324,7 +322,7 @@ function update_users_locations() {
             $txt .= "\n" . $user->lastip;
         }
         if ($txt != '' ) {
-            $user = $DB->get_record('user', array('id' => 2));
+            $user = $DB->get_record('user', ['id' => 2]);
             email_to_user($user, get_admin(), 'Location', $txt);
         }
     }
@@ -381,7 +379,7 @@ function extractbody($response) {
     $header = substr($response, 0, $pos);
     $body = substr($response, $pos + 2 * strlen($crlf));
     // Parse headers.
-    $headers = array();
+    $headers = [];
     $lines = explode($crlf, $header);
 
     foreach ($lines as $line) {
@@ -413,12 +411,12 @@ function gettimetoshowusers() {
  * @return Array of decimal
  */
 function getCurrentUserLocation(){
-    global $CFG, $USER, $DB;
-    $coords = array();
+    global $USER, $DB;
+    $coords = [];
     $sql = "SELECT boumc.userid, boumc.lat, boumc.lng
             FROM {block_online_users_map} boumc
             WHERE userid = ?";
-    $c = $DB->get_record_sql($sql, array($USER->id));
+    $c = $DB->get_record_sql($sql, [$USER->id]);
     if ($c) {
         $coords['lat'] = $c->lat;
         $coords['lng'] = $c->lng;
@@ -433,7 +431,7 @@ function getCurrentUserLocation(){
  * @return string of the JSON object
  */
 
-function phpToJSON($objects, $name, $callback='') {
+function phptojson($objects, $name, $callback='') {
     $str = '';
     if ($callback != '') {
         $str .= $callback . '(';
