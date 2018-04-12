@@ -24,72 +24,51 @@
 
 namespace block_online_users_map\privacy;
 
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\helper;
+use core_privacy\local\request\transform;
+use core_privacy\local\request\writer;
+
 defined('MOODLE_INTERNAL') || die();
 
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\helper;
-use \core_privacy\local\request\deletion_criteria;
-use \core_privacy\local\metadata\collection;
-
 /**
- * Privacy Subsystem implementation for block_html.
- *
  * Privacy Subsystem implementation for block_online_users_map.
  *
  * @author  Alex Little
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package block_online_users_map
  */
-class provider implements
-        // The block_html block stores user provided data.
-        \core_privacy\local\metadata\provider,
-
-        // The block_html block provides data directly to core.
-        \core_privacy\local\request\plugin\provider {
+class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\plugin\provider {
 
     /**
-     * Returns information about how block_html stores its data.
+     * Returns information about how block_online_users_map stores its data.
      *
      * @param   collection     $collection The initialised collection to add items to.
      * @return  collection     A listing of user data stored through this system.
      */
     public static function get_metadata(collection $collection) : collection {
-        $collection->link_subsystem('block', 'privacy:metadata:block');
-
+        $arr = [
+            'userid'  => 'privacy:metadata:block_online_users_map:userid',
+            'lat'     => 'privacy:metadata:block_online_users_map:lat',
+            'lng'     => 'privacy:metadata:block_online_users_map:lng',
+            'city'    => 'privacy:metadata:block_online_users_map:city',
+            'country' => 'privacy:metadata:block_online_users_map:country'];
+        $collection->add_database_table('block_online_users_map', $arr, 'privacy:metadata:block_online_users_map');
         return $collection;
     }
 
     /**
-     * Get the list of contexts that contain user information for the specified user.
+     * Get empty list of contexts.
      *
-     * @param   int         $userid     The user to search.
-     * @return  contextlist   $contextlist  The contextlist containing the list of contexts used in this plugin.
+     * @param   int           $userid       The user to search.
+     * @return  contextlist   $contextlist  The list of contexts used in this plugin.
      */
-    public static function get_contexts_for_userid(int $userid) : \core_privacy\local\request\contextlist {
-        // This block doesn't know who information is stored against unless it
-        // is at the user context.
-        $contextlist = new \core_privacy\local\request\contextlist();
-
-        $sql = "SELECT c.id
-                  FROM {block_instances} b
-            INNER JOIN {context} c ON c.instanceid = b.id AND c.contextlevel = :contextblock
-            INNER JOIN {context} bpc ON bpc.id = b.parentcontextid
-                 WHERE b.blockname = 'html'
-                   AND bpc.contextlevel = :contextuser
-                   AND bpc.instanceid = :userid";
-
-        $params = [
-            'contextblock' => CONTEXT_BLOCK,
-            'contextuser' => CONTEXT_USER,
-            'userid' => $userid,
-        ];
-
-        $contextlist->add_from_sql($sql, $params);
-
-        return $contextlist;
+    public static function get_contexts_for_userid(int $userid) : contextlist {
+        return new \core_privacy\local\request\contextlist();
     }
-
+    
     /**
      * Export all user data for the specified user, in the specified contexts.
      *
@@ -97,87 +76,20 @@ class provider implements
      */
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
-
         $user = $contextlist->get_user();
-
-        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
-
-        $sql = "SELECT
-                    c.id AS contextid,
-                    bi.*
-                  FROM {context} c
-            INNER JOIN {block_instances} bi ON bi.id = c.instanceid AND c.contextlevel = :contextlevel
-                 WHERE bi.blockname = 'html'
-                   AND(
-                    c.id {$contextsql}
-                )
-        ";
-
-        $params = [
-            'contextlevel' => CONTEXT_BLOCK,
-        ];
-        $params += $contextparams;
-
-        $instances = $DB->get_recordset_sql($sql, $params);
-        foreach ($instances as $instance) {
-            $context = \context_block::instance($instance->id);
-            $block = block_instance('html', $instance);
-            if (empty($block->config)) {
-                // Skip this block. It has not been configured.
-                continue;
-            }
-
-            $html = writer::with_context($context)->rewrite_pluginfile_urls([], 'block_html',
-                'content', null, $block->config->text);
-
-            // Default to FORMAT_HTML which is what will have been used before the
-            // editor was properly implemented for the block.
-            $format = isset($block->config->format) ? $block->config->format : FORMAT_HTML;
-
-            $filteropt = (object) ['overflowdiv' => true, 'noclean' => true];
-            $html = format_text($html, $format, $filteropt);
-
-            $data = helper::get_context_data($context, $user);
-            helper::export_context_files($context, $user);
-            $data->title = $block->config->title;
-            $data->content = $html;
-
+        if ($data = $DB->get_record('block_online_users_map', ['userid' => $user->id])) {
+            unset($data->id);
+            $context = \context_system::instance();
             writer::with_context($context)->export_data([], $data);
         }
-        $instances->close();
     }
-
-    /**
-     * Delete all data for all users in the specified context.
-     *
-     * @param   context                 $context   The specific context to delete data for.
-     */
+    
     public static function delete_data_for_all_users_in_context(\context $context) {
-        // The only way to delete data for the html block is to delete the block instance itself.
-        blocks_delete_instance(static::get_instance_from_context($context));
-    }
-
-    /**
-     * Delete all user data for the specified user, in the specified contexts.
-     *
-     * @param   approved_contextlist    $contextlist    The approved contexts and user information to delete information for.
-     */
-    public static function delete_data_for_user(approved_contextlist $contextlist) {
-        // The only way to delete data for the html block is to delete the block instance itself.
-        foreach ($contextlist as $context) {
-            blocks_delete_instance(static::get_instance_from_context($context));
-        }
-    }
-
-    /**
-     * Get the block instance record for the specified context.
-     *
-     * @param   \context_block $context The context to fetch
-     * @return  \stdClass
-     */
-    protected static function get_instance_from_context(\context_block $context) {
         global $DB;
-
-        return $DB->get_record('block_instances', ['id' => $context->instanceid]);
     }
+    public static function delete_data_for_user(approved_contextlist $contextlist) {
+        global $DB;
+        $user = $contextlist->get_user();
+        return $DB->delete_records('block_online_users_map', ['userid' => $user->id]);
+    }  
 }

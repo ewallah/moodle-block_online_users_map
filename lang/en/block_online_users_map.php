@@ -43,3 +43,10 @@ $string['periodnminutes'] = 'last {$a} minutes';
 
 $string['online_users_map:addinstance'] = 'Add a new online users map block';
 $string['online_users_map:myaddinstance'] = 'Add a new online users map block to the My Moodle page';
+
+$string['privacy:metadata:block_online_users_map:userid'] = 'The userid of the user.';
+$string['privacy:metadata:block_online_users_map:country'] = 'The country of the user.';
+$string['privacy:metadata:block_online_users_map:lat'] = 'The latitude of the users city.';
+$string['privacy:metadata:block_online_users_map:lng'] = 'The longitude of the users city.';
+$string['privacy:metadata:block_online_users_map:city'] = 'The city of the user.';
+$string['privacy:metadata:block_online_users_map:country'] = 'The country of the user.';
