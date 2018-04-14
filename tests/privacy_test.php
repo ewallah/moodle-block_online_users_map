@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
-require_once($CFG->dirroot . '/comment/lib.php');
 
 use \core_privacy\tests\provider_testcase;
 
@@ -40,78 +39,80 @@ use \core_privacy\tests\provider_testcase;
  */
 class block_online_users_map_privacy_testcase extends provider_testcase {
 
+    /** stdClass user1 first user */
+    private $user1;
+    /** stdClass user2 second user */
+    private $user2;
+
     /**
-     * Check the exporting of comments for a user id in a context.
+     * Basic setup for these tests.
+     */
+    public function setUp() {
+        $this->resetAfterTest(true);
+        $user = new stdClass();
+        $user->country = 'AU';
+        $user->city = 'Perth';
+        $this->user1 = self::getDataGenerator()->create_user($user);
+        $user = new stdClass();
+        $user->country = 'BE';
+        $user->city = 'Brussel';
+        $this->user2 = self::getDataGenerator()->create_user($user);
+        update_users_locations();
+    }
+
+    /**
+     * Test returning metadata.
+     */
+    public function test_get_metadata() {
+        $collection = new \core_privacy\local\metadata\collection('block_online_users_map');
+        $collection = \block_online_users_map\privacy\provider::get_metadata($collection);
+        $this->assertNotEmpty($collection);
+    }
+
+    /**
+     * Test getting the context for the user ID related to this plugin.
+     */
+    public function test_get_contexts_for_userid() {
+        $contextlist = \block_online_users_map\privacy\provider::get_contexts_for_userid($this->user1->id);
+        $this->assertNotEmpty($contextlist);
+        $contextlist = \block_online_users_map\privacy\provider::get_contexts_for_userid($this->user2->id);
+        $this->assertNotEmpty($contextlist);
+    }
+
+    /**
+     * Check the exporting of locations for a user.
      */
     public function test_export_maps() {
-        $this->resetAfterTest(true);
-        
         $context = context_system::instance();
-        $user1 = new stdClass();
-        $user1->country = 'AU';
-        $user1->city = 'Perth';
-        $user1 = self::getDataGenerator()->create_user($user1);
-        $user2 = new stdClass();
-        $user2->country = 'BE';
-        $user2->city = 'Brussel';
-        $user2 = self::getDataGenerator()->create_user($user2);
-        update_users_locations();
-        
-        $this->export_context_data_for_user($user1->id, $context, 'block_online_users_map');
+        $this->export_context_data_for_user($this->user1->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
         $this->assertTrue($writer->has_any_data());
-        $this->export_context_data_for_user($user2->id, $context, 'block_online_users_map');
+        $this->export_context_data_for_user($this->user2->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
         $this->assertTrue($writer->has_any_data());
     }
 
     /**
-     * Tests the deletion of all comments in a context.
+     * Tests the deletion of all locations.
      */
     public function test_delete_maps_for_all_users_in_context() {
-        $this->resetAfterTest();
-
         $context = context_system::instance();
-        $user1 = new stdClass();
-        $user1->country = 'AU';
-        $user1->city = 'Perth';
-        $user1 = self::getDataGenerator()->create_user($user1);
-        $user2 = new stdClass();
-        $user2->country = 'BE';
-        $user2->city = 'Brussel';
-        $user2 = self::getDataGenerator()->create_user($user2);
-        update_users_locations();
-        
-        
-        
-        // Delete only for the first context. All records in the comments table for this context should be removed.
-        //\core_comment\privacy\provider::delete_comments_for_all_users_in_context($coursecontext1);
-        // No records left here.
-        //$this->assertCount(0, $comment1->get_comments());
-        // All of the records are left intact here.
-        //$this->assertCount(2, $comment2->get_comments());
-
+        \block_online_users_map\privacy\provider::delete_data_for_all_users_in_context($context);
+        $list1 = new core_privacy\tests\request\approved_contextlist($this->user1, 'block_online_users_map', []);
+        $list2 = new core_privacy\tests\request\approved_contextlist($this->user2, 'block_online_users_map', []);
+        $this->assertEmpty($list1);
+        $this->assertEmpty($list2);
     }
 
     /**
-     * Tests deletion of comments for a specified user and contexts.
+     * Tests deletion of locations for a specified user.
      */
     public function test_delete_maps_for_user() {
-        $this->resetAfterTest();
-
         $context = context_system::instance();
-        $user1 = new stdClass();
-        $user1->country = 'AU';
-        $user1->city = 'Perth';
-        $user1 = self::getDataGenerator()->create_user($user1);
-        $user2 = new stdClass();
-        $user2->country = 'BE';
-        $user2->city = 'Brussel';
-        $user2 = self::getDataGenerator()->create_user($user2);
-        update_users_locations();
-        
-        // Delete the data for user 1.
-        $list = new core_privacy\tests\request\approved_contextlist($user1, 'block_online_users_map', []);
+        $list = new core_privacy\tests\request\approved_contextlist($this->user1, 'block_online_users_map', []);
         \block_online_users_map\privacy\provider::delete_data_for_user($list);
+        $this->export_context_data_for_user($this->user1->id, $context, 'block_online_users_map');
+        $writer = \core_privacy\local\request\writer::with_context($context);
+        $this->assertFalse($writer->has_any_data());
     }
 }

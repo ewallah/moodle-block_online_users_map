@@ -1,10 +1,5 @@
 language: php
 
-notifications:
-  email:
-    recipients:
-        - rdebleu@eWallah.net
-
 sudo: required
 
 addons:
