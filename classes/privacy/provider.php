@@ -24,6 +24,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 namespace block_online_users_map\privacy;
 
 use \core_privacy\local\request\approved_contextlist;
@@ -87,7 +89,6 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             return;
         }
         $context = reset($contexts);
-        
         if ($context->contextlevel !== CONTEXT_SYSTEM) {
             return;
         }

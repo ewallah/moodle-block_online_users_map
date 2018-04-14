@@ -50,4 +50,4 @@ $string['privacy:metadata:block_online_users_map:lat'] = 'The latitude of the us
 $string['privacy:metadata:block_online_users_map:lng'] = 'The longitude of the users city.';
 $string['privacy:metadata:block_online_users_map:city'] = 'The city of the user.';
 $string['privacy:metadata:block_online_users_map:country'] = 'The country of the user.';
-$string['privacy:metadata:block_online_users_map'] = 'The block online_users_map stores data about a users location'; 
+$string['privacy:metadata:block_online_users_map'] = 'The block online_users_map stores data about a users location';
