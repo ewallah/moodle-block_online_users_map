@@ -24,8 +24,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 namespace block_online_users_map\privacy;
 
 use \core_privacy\local\request\approved_contextlist;
@@ -33,6 +31,8 @@ use \core_privacy\local\request\contextlist;
 use \core_privacy\local\request\writer;
 use \core_privacy\local\request\deletion_criteria;
 use \core_privacy\local\metadata\collection;
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Privacy provider class.
