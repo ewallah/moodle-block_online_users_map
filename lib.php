@@ -107,7 +107,7 @@ function getcountrycities($country = 'NL') {
 /**
  * Get the user locations.
  *
- * @parem int $limit
+ * @param int $limit
  * @return string json encoded string
  */
 function getuserlocations($limit = 1500) {
@@ -293,8 +293,8 @@ function update_users_locations() {
 /**
  * Insert a failed location
  *
- * @param string $domain
- * @param string $path 
+ * @param string $user
+ * @param string $txt 
  * @return String body of the returned request
  */
 function insertfail($user, $txt) {
@@ -354,9 +354,10 @@ function geturlcontent($domain, $path) {
 }
 
 /**
- * removes the headers from a url response
- . @param string $response
- * @return String body of the returned request
+ * Removes the headers from a url response.
+ *
+ * @param string $response
+ * @return string body of the returned request
  */
 function extractbody($response) {
     $crlf = "\r\n";
@@ -381,7 +382,8 @@ function extractbody($response) {
 
 /**
  * Gets the timetosee value
- * @return Integer
+ *
+ * @return int
  */
 function gettimetoshowusers() {
     global $CFG;
@@ -394,7 +396,8 @@ function gettimetoshowusers() {
 
 
 /**
- * Gets the lat/lng coords of the current user
+ * Gets the lat/lng coords of the current user.
+ *
  * @return Array of decimal
  */
 function getcurrentuserlocations() {
