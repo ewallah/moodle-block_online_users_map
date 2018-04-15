@@ -40,9 +40,9 @@ use \core_privacy\tests\provider_testcase;
  */
 class block_online_users_map_privacy_testcase extends provider_testcase {
 
-    /** stdClass user1 first user */
+    /** @var user1 first user */
     private $user1;
-    /** stdClass user2 second user */
+    /** @var user2 second user */
     private $user2;
 
     /**

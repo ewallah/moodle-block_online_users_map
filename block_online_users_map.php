@@ -38,18 +38,33 @@ require_once($CFG->dirroot.'/blocks/online_users_map/lib.php');
  */
 class block_online_users_map extends block_base {
 
+    /**
+     * Core function used to initialize the block.
+     */
     public function init() {
         $this->title = get_string('title', 'block_online_users_map');
     }
 
+    /**
+     * Has instance configuration
+     * @return boolean
+     */
     public function instance_allow_config() {
         return false;
     }
 
+    /**
+     * Has configuration
+     * @return boolean
+     */
     public function has_config() {
         return true;
     }
 
+    /**
+     * Gets the content for this block
+     * return string
+     */
     public function get_content() {
         global $CFG, $COURSE, $PAGE;
 
@@ -68,13 +83,16 @@ class block_online_users_map extends block_base {
             if ($this->instance->visible) {
                 $PAGE->requires->js(new moodle_url('https://www.google.com/jsapi'), true);
             }
-            $this->content->text = gethtmlforblock();
         } else {
             $this->content->text = get_html_googlemap();
         }
         return $this->content;
     }
 
+    /**
+     * Gets cron function
+     * return boolean
+     */
     public function cron() {
         update_users_locations();
         return true;

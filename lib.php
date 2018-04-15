@@ -27,6 +27,11 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/lib/datalib.php');
 
+/**
+ * Get the current user location.
+ *
+ * @return string location
+ */
 function currentuserlocation() {
     global $CFG, $USER, $DB;
     $txt = '';
@@ -41,6 +46,11 @@ function currentuserlocation() {
     return $txt;
 }
 
+/**
+ * Get the user cities.
+ *
+ * @return string json encoded string
+ */
 function getusercountries() {
     global $DB;
     $arr = [];
@@ -55,6 +65,11 @@ function getusercountries() {
     return json_encode($arr, JSON_HEX_APOS | JSON_NUMERIC_CHECK);
 }
 
+/**
+ * Get the user cities.
+ *
+ * @return string json encoded string
+ */
 function getusercities($limit = 1500) {
     global $DB;
     $arr = [];
@@ -69,6 +84,11 @@ function getusercities($limit = 1500) {
     return json_encode($arr, JSON_HEX_APOS | JSON_NUMERIC_CHECK);
 }
 
+/**
+ * Get the user countries and cities.
+ *
+ * @return string json encoded string
+ */
 function getcountrycities($country = 'NL') {
     global $DB;
     $arr = [];
@@ -83,6 +103,11 @@ function getcountrycities($country = 'NL') {
     return json_encode($arr, JSON_HEX_APOS | JSON_NUMERIC_CHECK);
 }
 
+/**
+ * Get the user locations.
+ *
+ * @return string json encoded string
+ */
 function getuserlocations($limit = 1500) {
     global $DB;
     $arr = [];
@@ -96,35 +121,6 @@ function getuserlocations($limit = 1500) {
         }
     }
     return json_encode($arr, JSON_HEX_APOS | JSON_NUMERIC_CHECK);
-}
-
-function gethtmlforblock() {
-    return '';
-    $txt = html_writer::tag('div', '', ['id' => 'block_online_users_chartdiv', 'style' => 'min-height:295px;overflow:hidden']);
-    $txt .= "<script type='text/javascript'>google.charts.setOnLoadCallback(adrawChart);";
-    $txt .= "var data, options, chart;";
-    $txt .= "function clickChart() {var selection = chart.getSelection(); var item = selection[0];";
-    $txt .= "window.location.href = '/blocks/online_users_map/view.php?country=' + data.getValue(item.row, 0);};";
-    $txt .= "function drawChart() {";
-    $txt .= " data = new google.visualization.DataTable();";
-    $txt .= " data.addColumn('string', 'country');";
-    $txt .= " data.addColumn('number', 'Students');";
-    $txt .= " data.addColumn({type: 'string', role: 'tooltip', 'p': {'html': true}});";
-    $txt .= " data.addRows(" . getusercountries() . ");";
-    $txt .= " options = {region: 'world', datalessRegionColor: '#F0F0F0', colorAxis: {colors:";
-    $txt .= "['#B5C202', '#106B52']}, tooltip: { isHtml: true, showColorCode: false }, backgroundColor: '#FAFAFA'};";
-    $txt .= "</script>";
-    return $txt;
-    $txt = html_writer::tag('div', '', ['id' => 'block_online_users_chartdiv', 'style' => 'min-height:295px;overflow:hidden']);
-    $txt .= "<script type='text/javascript'>google.charts.setOnLoadCallback(drawMap); var options, chart, data;";
-    $txt .= "function clickMap() { var selection = chart.getSelection(); var item = selection[0];";
-    $txt .= "window.location.href = '/blocks/online_users_map/view.php?country=' + data.getValue(item.row, 0);};";
-    $txt .= "function drawMap() { data = new google.visualization.DataTable({cols: [{id: 'c', label: 'Country', type: 'string'},";
-    $txt .= "{id: 'students', label: 'Students', type: 'number}], rows: [" . getusercountries() . "]});";
-    $txt .= "options = {region: 'world', datalessRegionColor: '#F0F0F0', colorAxis: {colors: ['#B5C202', '#106B52']},";
-    $txt .= "tooltip: { showColorCode: false }, backgroundColor: '#FAFAFA'};";
-    $txt .= "</script>";
-    return $txt;
 }
 
 /**
