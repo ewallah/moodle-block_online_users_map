@@ -54,17 +54,13 @@ class block_online_users_map extends block_base {
         if (empty($this->instance)) {
             return $this->content;
         }
-        if ($CFG->block_online_users_map_type == 'osm') {
-            $this->content->text = get_html_osmmap();
-        } else {
-            if ($COURSE->id == SITEID) {
-                if ($this->instance->visible) {
-                    $PAGE->requires->js(new moodle_url('https://www.google.com/jsapi'), true);
-                }
-                $this->content->text = gethtmlforblock();
-            } else {
-                $this->content->text = get_html_googlemap();
+        if ($COURSE->id == SITEID) {
+            if ($this->instance->visible) {
+                $PAGE->requires->js(new moodle_url('https://www.google.com/jsapi'), true);
             }
+            $this->content->text = gethtmlforblock();
+        } else {
+            $this->content->text = get_html_googlemap();
         }
         return $this->content;
     }

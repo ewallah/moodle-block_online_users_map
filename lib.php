@@ -139,22 +139,6 @@ function get_html_googlemap() {
 }
 
 /**
- * Generate the HTML content for the OSM map
- *
- * @return string HTML string to display OSM map
- */
-function get_html_osmmap() {
-    global $CFG;
-    $str = "<script type='text/javascript' src='" . $CFG->wwwroot;
-    $str .= "/blocks/online_users_map/online_users_map_osm.php' defer='defer'></script>";
-    $str .= "<script src='http://www.openlayers.org/api/OpenLayers.js'></script>";
-    $str .= "<link rel='stylesheet' type='text/css' href='".$CFG->wwwroot."/blocks/online_users_map/style.css' />";
-    $str .= "<script src='http://www.openstreetmap.org/openlayers/OpenStreetMap.js'></script>";
-    $str .= "<div id='block_online_users_osmmap'></div>";
-    return $str;
-}
-
-/**
  * Updates the lat/lng for users
  * @uses $CFG,$DB
  */

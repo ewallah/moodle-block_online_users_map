@@ -22,7 +22,7 @@ if ($ADMIN->fulltree) {
         get_string('configtimetosee', 'block_online_users_map'), 5, PARAM_INT));
     $settings->add(new admin_setting_configselect('block_online_users_map_type',
         get_string('type', 'block_online_users_map'),
-        get_string('configtype', 'block_online_users_map'), 0, array('google' => 'Google Maps', 'osm' => 'OpenStreetMap')));
+        get_string('configtype', 'block_online_users_map'), 0, ['google' => 'Google Maps']));
     $settings->add(new admin_setting_configtext('block_online_users_map_centre_lat',
         get_string('centrelat', 'block_online_users_map'),
         get_string('configcentrelat', 'block_online_users_map'), 0, PARAM_NUMBER));

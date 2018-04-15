@@ -3,13 +3,6 @@
     top: 6px;
 }
 
-#block_online_users_osmmap {
-    height: 150px;
-    width: 100%;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
 #block_online_users_googlemap {
     height: 150px;
     width: 100%;
