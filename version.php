@@ -14,11 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Online Users Map block - Customised online users map based on work of Alex Little
+ *
+ * @package   block_online_users_map
+ * @copyright 2018 onwards iplusacademy  {@link https://www.iplusacademy.org}
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @author    Alex Little
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
+ */
 
-$plugin->version = 2016112000;
-$plugin->cron = 3600;
+defined('MOODLE_INTERNAL') || die();
+$plugin->version = 2017102900;
+$plugin->requires = 2017050500;
+$plugin->release = '3.4';
+$plugin->maturity = MATURITY_STABLE;
 $plugin->component = 'block_online_users_map';
-$plugin->release = 2016112000;
-$plugin->requires = 2011033006.00;
-$plugin->maturity = "Stable version";

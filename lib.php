@@ -15,10 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Online Users Map block
+ * Online Users Map block - Customised online users map based on work of Alex Little
+ *
+ * @package   block_online_users_map
+ * @copyright 2018 onwards iplusacademy  {@link https://www.iplusacademy.org}
+ * @author    Renaat Debleu (www.ewallah.net)
  * @author Alex Little
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package block_online_users_map
  */
 
 defined('MOODLE_INTERNAL') || die();

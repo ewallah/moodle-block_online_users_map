@@ -20,7 +20,7 @@ function loadUsersCallback(jData){
         return;
     }
     var users = jData;
-    for (i=0; i < users.length; i++){
+    for (i = 0; i < users.length; i++){
         createMarker(users[i]);
     }
 }
@@ -29,9 +29,9 @@ function createMarker(user){
     if (user.lat != "" && user.lng != ""){
         var point = new google.maps.LatLng(user.lat, user.lng);
         if(user.online == "true"){
-             createOnlineMarker(point, user.fullname);
+            createOnlineMarker(point, user.fullname);
         } else {
-           createOfflineMarker(point, user.fullname);
+            createOfflineMarker(point, user.fullname);
         }
     }
 }
@@ -45,13 +45,7 @@ function createOnlineMarker(point, user){
                  new google.maps.Size(22, 15),
                  new google.maps.Point(0,0),
                  new google.maps.Point(7, 15));
-
-    var marker = new google.maps.Marker({
-                 position: point,
-                 map: map,
-                 shadow: shadow,
-                 icon: image,
-                 title: user + " (online)"});
+    var marker = new google.maps.Marker({position: point, map: map, shadow: shadow, icon: image, title: user + " (online)"});
 }
 
 
@@ -64,55 +58,36 @@ function createOfflineMarker(point, user){
                  new google.maps.Size(22, 15),
                  new google.maps.Point(0,0),
                  new google.maps.Point(7, 15));
-    var marker = new google.maps.Marker({
-                 position: point,
-                 map: map,
-                 shadow: shadow,
-                 icon: image,
-                 title: user});
+    var marker = new google.maps.Marker({position: point, map: map, shadow: shadow, icon: image, title: user});
 }
 
 
 var map = null;
 
 function JSONscriptRequest(fullUrl) {
-    // REST request path
     this.fullUrl = fullUrl; 
-    // Keep IE from caching requests
     this.noCacheIE = '&noCacheIE=' + (new Date()).getTime();
-    // Get the DOM location to put the script tag
     this.headLoc = document.getElementsByTagName("head").item(0);
-    // Generate a unique script tag id
     this.scriptId = 'YJscriptId' + JSONscriptRequest.scriptCounter++;
 }
 
-// Static script ID counter
+// Static script ID counter.
 JSONscriptRequest.scriptCounter = 1;
 
-// buildScriptTag method
-//
+// buildScriptTag method.
 JSONscriptRequest.prototype.buildScriptTag = function () {
-
-    // Create the script tag
     this.scriptObj = document.createElement("script");
-    
-    // Add script object attributes
     this.scriptObj.setAttribute("type", "text/javascript");
     this.scriptObj.setAttribute("src", this.fullUrl + this.noCacheIE);
     this.scriptObj.setAttribute("id", this.scriptId);
 }
  
-// removeScriptTag method
-// 
+// removeScriptTag method.
 JSONscriptRequest.prototype.removeScriptTag = function () {
-    // Destroy the script tag
     this.headLoc.removeChild(this.scriptObj);  
 }
 
-// addScriptTag method
-//
+// addScriptTag method.
 JSONscriptRequest.prototype.addScriptTag = function () {
-    // Create the script tag
     this.headLoc.appendChild(this.scriptObj);
 }
-//google.maps.event.addDomListener(window, 'load', initialize);

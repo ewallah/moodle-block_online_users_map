@@ -14,18 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
- /* Online Users Map block - reworking of the standard Moodle online users
- * block, but this displays the users on a Google map - using the location
- * given in the Moodle profile.
- * @author Alex Little
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package block_online_users_map
+/**
+ * Online Users Map block - Customised online users map based on work of Alex Little
+ *
+ * @package   block_online_users_map
+ * @copyright 2018 onwards iplusacademy  {@link https://www.iplusacademy.org}
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @author    Alex Little
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/blocks/online_users_map/lib.php');
 
+/**
+ * Online Users Map block - Customised online users map based on work of Alex Little
+ *
+ * @package   block_online_users_map
+ * @copyright 2018 onwards iplusacademy  {@link https://www.iplusacademy.org}
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @author    Alex Little
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
+ */
 class block_online_users_map extends block_base {
 
     public function init() {
