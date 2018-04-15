@@ -401,7 +401,7 @@ function gettimetoshowusers() {
 
 /**
  * Gets the lat/lng coords of the current user
- * @uses $CFG,$USER,$DB
+ * @uses $USER, $DB
  * @return Array of decimal
  */
 function getcurrentuserlocations() {
@@ -424,7 +424,6 @@ function getcurrentuserlocations() {
  * @param $callback name of the callback function
  * @return string of the JSON object
  */
-
 function phptojson($objects, $name, $callback='') {
     $str = '';
     if ($callback != '') {

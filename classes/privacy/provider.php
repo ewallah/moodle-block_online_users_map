@@ -70,9 +70,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
         $contextlist = new \core_privacy\local\request\contextlist();
-        // The block_online_users_map data is associated at system context level.
-        $sql = "SELECT id FROM {context} WHERE id = 1";
-        $contextlist->add_from_sql($sql, []);
+        $contextlist->add_from_sql("SELECT id FROM {context} WHERE id = 1", []);
         return $contextlist;
     }
 
@@ -95,7 +93,6 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         $user = $contextlist->get_user();
         if ($data = $DB->get_record('block_online_users_map', ['userid' => $user->id])) {
             unset($data->id);
-            $context = \context_system::instance();
             writer::with_context($context)->export_data([], $data);
         }
     }
