@@ -65,7 +65,7 @@ function createOfflineMarker(point, user){
 var map = null;
 
 function JSONscriptRequest(fullUrl) {
-    this.fullUrl = fullUrl; 
+    this.fullUrl = fullUrl;
     this.noCacheIE = '&noCacheIE=' + (new Date()).getTime();
     this.headLoc = document.getElementsByTagName("head").item(0);
     this.scriptId = 'YJscriptId' + JSONscriptRequest.scriptCounter++;
@@ -74,20 +74,20 @@ function JSONscriptRequest(fullUrl) {
 // Static script ID counter.
 JSONscriptRequest.scriptCounter = 1;
 
-// buildScriptTag method.
+// BuildScriptTag method.
 JSONscriptRequest.prototype.buildScriptTag = function () {
     this.scriptObj = document.createElement("script");
     this.scriptObj.setAttribute("type", "text/javascript");
     this.scriptObj.setAttribute("src", this.fullUrl + this.noCacheIE);
     this.scriptObj.setAttribute("id", this.scriptId);
 }
- 
-// removeScriptTag method.
+
+// RemoveScriptTag method.
 JSONscriptRequest.prototype.removeScriptTag = function () {
-    this.headLoc.removeChild(this.scriptObj);  
+    this.headLoc.removeChild(this.scriptObj);
 }
 
-// addScriptTag method.
+// AddScriptTag method.
 JSONscriptRequest.prototype.addScriptTag = function () {
     this.headLoc.appendChild(this.scriptObj);
 }

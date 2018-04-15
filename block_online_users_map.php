@@ -25,7 +25,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/blocks/online_users_map/lib.php');
+require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
 
 /**
  * Online Users Map block - Customised online users map based on work of Alex Little
@@ -66,7 +66,7 @@ class block_online_users_map extends block_base {
      * return string
      */
     public function get_content() {
-        global $CFG, $COURSE, $PAGE;
+        global $COURSE, $PAGE;
 
         if ($this->content !== null) {
             return $this->content;
