@@ -67,7 +67,7 @@ function getusercountries() {
 
 /**
  * Get the user cities.
- *
+ * @param int $limit
  * @return string json encoded string
  */
 function getusercities($limit = 1500) {
@@ -87,6 +87,7 @@ function getusercities($limit = 1500) {
 /**
  * Get the user countries and cities.
  *
+ * @param string $country
  * @return string json encoded string
  */
 function getcountrycities($country = 'NL') {
@@ -106,6 +107,7 @@ function getcountrycities($country = 'NL') {
 /**
  * Get the user locations.
  *
+ * @parem int $limit
  * @return string json encoded string
  */
 function getuserlocations($limit = 1500) {
@@ -288,6 +290,13 @@ function update_users_locations() {
     return true;
 }
 
+/**
+ * Insert a failed location
+ *
+ * @param string $domain
+ * @param string $path 
+ * @return String body of the returned request
+ */
 function insertfail($user, $txt) {
     global $CFG, $DB;
     $boumc = new stdClass;
@@ -308,7 +317,9 @@ function insertfail($user, $txt) {
 
 /**
  * Gets the content of a url request
- * @uses $CFG
+ *
+ * @param string $domain
+ * @param string $path 
  * @return String body of the returned request
  */
 function geturlcontent($domain, $path) {
@@ -344,6 +355,7 @@ function geturlcontent($domain, $path) {
 
 /**
  * removes the headers from a url response
+ . @param string $response
  * @return String body of the returned request
  */
 function extractbody($response) {
@@ -369,7 +381,6 @@ function extractbody($response) {
 
 /**
  * Gets the timetosee value
- * @uses $CFG
  * @return Integer
  */
 function gettimetoshowusers() {
@@ -384,7 +395,6 @@ function gettimetoshowusers() {
 
 /**
  * Gets the lat/lng coords of the current user
- * @uses $USER, $DB
  * @return Array of decimal
  */
 function getcurrentuserlocations() {
@@ -402,6 +412,8 @@ function getcurrentuserlocations() {
 }
 
 /**
+ * Convert object to json format
+ *
  * @param $objects object to turn into JSON
  * @param $name overall name of the JSON object
  * @param $callback name of the callback function
