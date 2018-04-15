@@ -417,9 +417,9 @@ function getcurrentuserlocations() {
 /**
  * Convert object to json format
  *
- * @param $objects object to turn into JSON
- * @param $name overall name of the JSON object
- * @param $callback name of the callback function
+ * @param objects $objects objects to turn into JSON
+ * @param string $name overall name of the JSON object
+ * @param string $callback name of the callback function
  * @return string of the JSON object
  */
 function phptojson($objects, $name, $callback='') {
