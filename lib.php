@@ -294,7 +294,7 @@ function update_users_locations() {
  * Insert a failed location
  *
  * @param string $user
- * @param string $txt 
+ * @param string $txt
  * @return String body of the returned request
  */
 function insertfail($user, $txt) {
@@ -319,7 +319,7 @@ function insertfail($user, $txt) {
  * Gets the content of a url request
  *
  * @param string $domain
- * @param string $path 
+ * @param string $path
  * @return String body of the returned request
  */
 function geturlcontent($domain, $path) {
