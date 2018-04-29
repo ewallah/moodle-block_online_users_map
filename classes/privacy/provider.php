@@ -69,8 +69,14 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      * @return  contextlist   $contextlist  The contextlist containing the list of contexts used in this plugin.
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
+        $sql = "SELECT id
+                  FROM {context}
+                 WHERE instanceid = :userid
+                       AND contextlevel = :contextlevel";
+
         $contextlist = new \core_privacy\local\request\contextlist();
-        $contextlist->add_from_sql("SELECT id FROM {context} WHERE id = 1", []);
+        $contextlist->set_component('blocks_online_users_map');
+        $contextlist->add_from_sql($sql, ['userid' => $userid, 'contextlevel' => CONTEXT_USER]);
         return $contextlist;
     }
 
@@ -87,7 +93,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             return;
         }
         $context = reset($contexts);
-        if ($context->contextlevel !== CONTEXT_SYSTEM) {
+        if ($context->contextlevel !== CONTEXT_USER) {
             return;
         }
         $user = $contextlist->get_user();
@@ -114,10 +120,9 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
-        if ($context->contextlevel !== CONTEXT_SYSTEM) {
+        if ($context->contextlevel !== CONTEXT_USER) {
             return;
         }
         $DB->execute("DELETE FROM {block_online_users_map}");
     }
-
 }

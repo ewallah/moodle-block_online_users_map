@@ -84,10 +84,11 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
      * Check the exporting of locations for a user.
      */
     public function test_export_maps() {
-        $context = context_system::instance();
+        $context = context_user::instance($this->user1->id);
         $this->export_context_data_for_user($this->user1->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
         $this->assertTrue($writer->has_any_data());
+        $context = context_user::instance($this->user2->id);
         $this->export_context_data_for_user($this->user2->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
         $this->assertTrue($writer->has_any_data());
@@ -97,7 +98,7 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
      * Tests the deletion of all locations.
      */
     public function test_delete_maps_for_all_users_in_context() {
-        $context = context_system::instance();
+        $context = context_user::instance($this->user1->id);
         \block_online_users_map\privacy\provider::delete_data_for_all_users_in_context($context);
         $list1 = new core_privacy\tests\request\approved_contextlist($this->user1, 'block_online_users_map', []);
         $list2 = new core_privacy\tests\request\approved_contextlist($this->user2, 'block_online_users_map', []);
@@ -109,11 +110,15 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
      * Tests deletion of locations for a specified user.
      */
     public function test_delete_maps_for_user() {
-        $context = context_system::instance();
+        $context = context_user::instance($this->user1->id);
         $list = new core_privacy\tests\request\approved_contextlist($this->user1, 'block_online_users_map', []);
         \block_online_users_map\privacy\provider::delete_data_for_user($list);
         $this->export_context_data_for_user($this->user1->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
         $this->assertFalse($writer->has_any_data());
+        $context = context_user::instance($this->user2->id);
+        $this->export_context_data_for_user($this->user2->id, $context, 'block_online_users_map');
+        $writer = \core_privacy\local\request\writer::with_context($context);
+        $this->assertTrue($writer->has_any_data());
     }
 }
