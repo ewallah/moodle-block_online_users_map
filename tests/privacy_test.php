@@ -67,7 +67,7 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
         $loc = new stdClass();
         $loc->userid = $this->user2->id;
         $loc->lat = 50.85;
-        $loc->lng = 4.3(;
+        $loc->lng = 4.3;
         $loc->country = 'AU';
         $loc->city = 'Perth';
         $DB->insert_record('block_online_users_map', $loc);
