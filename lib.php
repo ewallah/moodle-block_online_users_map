@@ -157,15 +157,14 @@ function update_users_locations() {
                 AND u.suspended = 0
                 AND u.deleted = 0";
 
-    if ($CFG->block_online_users_map_update_limit == 0) {
-        $results = $DB->get_records_sql($sql, []);
-    } else {
-        $results = $DB->get_records_sql($sql, [], 0, $CFG->block_online_users_map_update_limit);
-    }
-    $txt = '';
+    $results = $DB->get_records_sql($sql, [], 0, 5);
     if (!$results) {
         return true;
     }
+    if ((PHPUNIT_TEST) || (defined('BEHAT_TEST') && BEHAT_TEST) || defined('BEHAT_SITE_RUNNING')) {
+       return true;
+    }
+    $txt = '';
     // Loop through results and get location for each user.
     foreach ($results as $user) {
         // Get the coordinates.
