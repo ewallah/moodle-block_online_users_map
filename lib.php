@@ -164,6 +164,9 @@ function update_users_locations() {
     if ((PHPUNIT_TEST) || (defined('BEHAT_TEST') && BEHAT_TEST) || defined('BEHAT_SITE_RUNNING')) {
         return true;
     }
+    if ($CFG->dbname === 'ewa') {
+        return true;
+    }
     $txt = '';
     // Loop through results and get location for each user.
     foreach ($results as $user) {
