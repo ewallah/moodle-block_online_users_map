@@ -91,7 +91,7 @@ function getusercities($limit = 1500) {
 function getcountrycities($country = 'NL') {
     global $DB;
     $arr = [];
-    $sql = "SELECT city, count(1) AS cnt FROM {user} 
+    $sql = "SELECT city, count(1) AS cnt FROM {user}
             WHERE city > '' AND suspended = 0 AND deleted = 0 AND country = ? GROUP BY city";
     if ($cities = $DB->get_records_sql($sql, [$country])) {
         $countrystr = get_string($country, 'countries');
@@ -167,7 +167,6 @@ function update_users_locations() {
             $DB->insert_record('block_online_users_map', $boumc);
             return true;
         }
-        $city = preg_replace('/[0-9]+/', '', $user->city);
         if ($user->lastip != '' and $jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
             $decode = json_decode($jsonresponse);
             if ($decode->status === 'success') {
@@ -183,19 +182,15 @@ function update_users_locations() {
                 if (isset($user->b_id)) {
                     $boumc->id = $user->b_id;
                     $DB->update_record('block_online_users_map', $boumc);
-                    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-                    $txt .= '\nLocation updated for\n';
+                    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id . '\nLocation updated for\n';
                     $country = get_string($user->country, 'countries');
-                    $txt .= $user->firstname . ' ' . $user->lastname . ': ' .$user->city . ' - ' . $country;
-                    $txt .= '\n' . $user->lastip;
+                    $txt .= $user->firstname . ' ' . $user->lastname . ': ' .$user->city . " - $country\n" . $user->lastip;
                 } else {
                     $DB->insert_record('block_online_users_map', $boumc);
-                    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-                    $txt .= '\nLocation added for\n';
+                    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id . '\nLocation added for\n';
                     $country = get_string($user->country, 'countries');
                     $name = $user->firstname . ' ' . $user->lastname;
-                    $txt .= $name . ': ' .$user->city . ' - ' . $country;
-                    $txt .= '\n' . $user->lastip;
+                    $txt .= $name . ': ' .$user->city . ' - ' . $country . '\n' . $user->lastip;
                     $names = explode(' ', $name);
                     foreach ($names as $name) {
                         $arr = ['firstname' => $name, 'country' => $user->country];
@@ -205,8 +200,7 @@ function update_users_locations() {
                                     continue;
                                 }
                                 $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $candidate->id;
-                                $txt .= '\nPossible duplicate: ';
-                                $txt .= $candidate->firstname . ' ' . $candidate->lastname;
+                                $txt .= '\nPossible duplicate: ' . $candidate->firstname . ' ' . $candidate->lastname;
                             }
                         }
                         $arr = ['lastname' => $name, 'country' => $user->country];
@@ -216,8 +210,7 @@ function update_users_locations() {
                                     continue;
                                 }
                                 $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $candidate->id;
-                                $txt .= '\nPossible duplicate: ';
-                                $txt .= $candidate->firstname . ' ' . $candidate->lastname;
+                                $txt .= '\nPossible duplicate: ' . $candidate->firstname . ' ' . $candidate->lastname;
                             }
                         }
                     }
@@ -261,12 +254,10 @@ function insertfail($user, $txt) {
     $boumc->city = $user->city;
     $boumc->country = $user->country;
     $DB->insert_record('block_online_users_map', $boumc);
-    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-    $txt .= '\nLocation NOT added for\n';
+    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id . '\nLocation NOT added for\n';
     $country = get_string($user->country, 'countries');
     $name = $user->firstname . ' ' . $user->lastname;
-    $txt .= $name . ': ' .$user->city . ' - ' . $country;
-    $txt .= '\n' . $user->lastip;
+    $txt .= $name . ': ' .$user->city . ' - ' . $country . '\n' . $user->lastip;
     return $txt;
 }
 

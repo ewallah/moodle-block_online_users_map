@@ -22,12 +22,11 @@
  * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use \core_privacy\tests\provider_testcase;
+use block_online_users_map\privacy\provider;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
-
-use \core_privacy\tests\provider_testcase;
 
 /**
  * Unit tests for block_online_users_map/classes/privacy/policy
@@ -48,6 +47,8 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
      * Basic setup for these tests.
      */
     public function setUp() {
+        global $CFG;
+        require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
         $this->resetAfterTest(true);
         $user = new stdClass();
         $user->country = 'AU';
