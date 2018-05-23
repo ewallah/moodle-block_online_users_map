@@ -157,33 +157,43 @@ function update_users_locations() {
                 AND u.suspended = 0
                 AND u.deleted = 0";
 
-    $results = $DB->get_records_sql($sql, [], 0, 5);
+    $results = $DB->get_records_sql($sql, [], 0, 1);
     if (!$results) {
-        return true;
-    }
-    if ((PHPUNIT_TEST) || (defined('BEHAT_TEST') && BEHAT_TEST) || defined('BEHAT_SITE_RUNNING')) {
-        return true;
-    }
-    if ($CFG->dbname === 'ewa') {
         return true;
     }
     $txt = '';
     // Loop through results and get location for each user.
     foreach ($results as $user) {
         // Get the coordinates.
+        $boumc = new stdClass;
+        if ((PHPUNIT_TEST) || (defined('BEHAT_TEST') && BEHAT_TEST) || defined('BEHAT_SITE_RUNNING')) {
+            $boumc->userid = $user->id;
+            $boumc->lat = 33;
+            $boumc->lng = 66;
+            $boumc->city = $user->city;
+            $boumc->country = $user->country;
+            $DB->insert_record("block_online_users_map", $boumc);
+            return true;
+        }
         $city = preg_replace('/[0-9]+/', '', $user->city);
-        $response = geturlcontent("http://othello.ws.geonames.org",
-                    "/search?maxRows=1&q=" . urlencode($city) . "&country=" . urlencode($user->country));
-        if ($xml = simplexml_load_string($response)) {
-            $boumc = new stdClass;
-            if (isset($xml->geoname->lat)) {
+        if ($user->lastip != '' and $jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
+            $decodedresponse = json_decode($jsonresponse);
+            if ($decodedresponse->status === 'success') {
+                $txt .= "\n" . $user->id;
+                $txt .= "\n" . $user->b_id;
+                $txt .= "\n" . $decodedresponse->country;
+                $txt .= "\n" . $decodedresponse->countryCode;
+                $txt .= "\n" . $decodedresponse->city;
+                $txt .= "\n" . $decodedresponse->zip;
+                $txt .= "\n" . $decodedresponse->lat;
+                $txt .= "\n" . $decodedresponse->lon;
+                $txt .= "\n" . $decodedresponse->timezone;
+                $boumc->id = $user->b_id;
                 $boumc->userid = $user->id;
-                $boumc->lat = (float)$xml->geoname->lat;
-                $boumc->lng = (float)$xml->geoname->lng;
-                $boumc->city = $user->city;
-                $boumc->country = $user->country;
-
-                // If existing record from block_online_users_map then update.
+                $boumc->lat = $decodedresponse->lat;
+                $boumc->lng = $decodedresponse->lon;
+                $boumc->city = $decodedresponse->city;
+                $boumc->country = $decodedresponse->countryCode;
                 if (isset($user->b_id)) {
                     $boumc->id = $user->b_id;
                     $DB->update_record("block_online_users_map", $boumc);
@@ -225,68 +235,23 @@ function update_users_locations() {
                             }
                         }
                     }
-                    if ($user->lastip != '' and $jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
-                        $decodedresponse = json_decode($jsonresponse);
-                        if ($decodedresponse->status === 'success') {
-                            $txt .= "\n" . $decodedresponse->country;
-                            $txt .= "\n" . $decodedresponse->city;
-                            $txt .= "\n" . $decodedresponse->zip;
-                            $txt .= "\n" . $decodedresponse->timezone;
-                            if ($user->timezone === '99') {
-                                $DB->set_field('user', 'timezone', $decodedresponse->timezone, ['id' => $user->id]);
-                            }
-                        }
+                }
+                if ($user->timezone === '99') {
+                    try {
+                        $DB->set_field('user', 'timezone', $decodedresponse->timezone, ['id' => $user->id]);
+                    } catch (exception $e) {
+                        error_log('Error: block_online_users_map update error: ' . serialize($e));
                     }
                 }
             } else {
-                if ($user->lastip != '' and $jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
-                    $decodedresponse = json_decode($jsonresponse);
-                    if ($decodedresponse->status === 'success') {
-                        $txt .= "\n" . $user->id;
-                        $txt .= "\n" . $user->b_id;
-                        $txt .= "\n" . $decodedresponse->country;
-                        $txt .= "\n" . $decodedresponse->countryCode;
-                        $txt .= "\n" . $decodedresponse->city;
-                        $txt .= "\n" . $decodedresponse->zip;
-                        $txt .= "\n" . $decodedresponse->lat;
-                        $txt .= "\n" . $decodedresponse->lon;
-                        $txt .= "\n" . $decodedresponse->timezone;
-                        $boumc->id = $user->b_id;
-                        $boumc->userid = $user->id;
-                        $boumc->lat = $decodedresponse->lat;
-                        $boumc->lng = $decodedresponse->lon;
-                        $boumc->city = $decodedresponse->city;
-                        $boumc->country = $decodedresponse->countryCode;
-                        try {
-                            $DB->update_record("block_online_users_map", $boumc);
-                        } catch (exception $e) {
-                            debugging('Warning: block_online_users_map update error ' . serialize($e), DEBUG_DEVELOPER);
-                        }
-                        if ($user->timezone === '99') {
-                            try {
-                                $DB->set_field('user', 'timezone', $decodedresponse->timezone, ['id' => $user->id]);
-                            } catch (exception $e) {
-                                debugging('Error: block_online_users_map update error ' . serialize($e), DEBUG_DEVELOPER);
-                            }
-                        }
-                    } else {
-                        // Failed.
-                        $txt .= insertfail($user, $txt);
-                    }
-                } else {
-                    $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-                    $txt .= "  NOT FOUND\n";
-                    $txt .= $user->firstname . " " . $user->lastname . ": " .$user->city . " - " . $user->country;
-                    $txt .= "\n" . $user->lastip;
-                }
+                // Failed.
+                $txt .= insertfail($user, $txt);
             }
         } else {
-            $txt .= "\nLocation not found due to no or invalid response";
             $txt .= insertfail($user, $txt);
         }
         if ($txt != '' ) {
-            $user = $DB->get_record('user', ['id' => 2]);
-            email_to_user($user, get_admin(), 'Location', $txt);
+            email_to_user(get_admin(), get_admin(), 'Location', $txt);
         }
     }
     return true;

@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
+require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
 
 use \core_privacy\tests\provider_testcase;
 
@@ -53,24 +54,12 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
         $user->country = 'AU';
         $user->city = 'Perth';
         $this->user1 = self::getDataGenerator()->create_user($user);
-        $loc = new stdClass();
-        $loc->userid = $this->user1->id;
-        $loc->lat = 31.95;
-        $loc->lng = 115.86;
-        $loc->country = 'AU';
-        $loc->city = 'Perth';
-        $DB->insert_record('block_online_users_map', $loc);
         $user = new stdClass();
         $user->country = 'BE';
         $user->city = 'Brussel';
         $this->user2 = self::getDataGenerator()->create_user($user);
-        $loc = new stdClass();
-        $loc->userid = $this->user2->id;
-        $loc->lat = 50.85;
-        $loc->lng = 4.3;
-        $loc->country = 'AU';
-        $loc->city = 'Perth';
-        $DB->insert_record('block_online_users_map', $loc);
+        update_users_locations();
+        update_users_locations();
     }
 
     /**
