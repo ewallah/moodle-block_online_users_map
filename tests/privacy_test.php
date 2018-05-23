@@ -24,7 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-global $CFG;
+
 require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
 
 use \core_privacy\tests\provider_testcase;
@@ -48,7 +48,6 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
      * Basic setup for these tests.
      */
     public function setUp() {
-        global $DB;
         $this->resetAfterTest(true);
         $user = new stdClass();
         $user->country = 'AU';

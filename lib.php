@@ -54,9 +54,7 @@ function currentuserlocation() {
 function getusercountries() {
     global $DB;
     $arr = [];
-    $sql = "SELECT country, count(1) AS cnt FROM {user}
-            WHERE country > '' AND suspended = 0 AND deleted = 0
-            GROUP BY country";
+    $sql = "SELECT country, count(1) AS cnt FROM {user} WHERE country > '' AND suspended = 0 AND deleted = 0 GROUP BY country";
     if ($countries = $DB->get_records_sql($sql)) {
         foreach ($countries as $country) {
             $arr[] = [$country->country, $country->cnt, get_string($country->country, 'countries')];
@@ -73,8 +71,8 @@ function getusercountries() {
 function getusercities($limit = 1500) {
     global $DB;
     $arr = [];
-    if ($cities = $DB->get_records_sql("SELECT city, count(1) AS cnt, country FROM {user} WHERE city > '' AND suspended = 0
-                AND deleted = 0 GROUP BY city", [], 0, $limit)) {
+    $sql = "SELECT city, count(1) AS cnt, country FROM {user} WHERE city > '' AND suspended = 0 AND deleted = 0 GROUP BY city";
+    if ($cities = $DB->get_records_sql($sql, [], 0, $limit)) {
         foreach ($cities as $city) {
             $countrystr = get_string($city->country, 'countries');
             $citystr = preg_replace('/[0-9]+/', '', $city->city);
@@ -93,8 +91,9 @@ function getusercities($limit = 1500) {
 function getcountrycities($country = 'NL') {
     global $DB;
     $arr = [];
-    if ($cities = $DB->get_records_sql("SELECT city, count(1) AS cnt FROM {user} WHERE city > '' AND suspended = 0
-                AND deleted = 0 AND country = ? GROUP BY city", [$country])) {
+    $sql = "SELECT city, count(1) AS cnt FROM {user} 
+            WHERE city > '' AND suspended = 0 AND deleted = 0 AND country = ? GROUP BY city";
+    if ($cities = $DB->get_records_sql($sql, [$country])) {
         $countrystr = get_string($country, 'countries');
         foreach ($cities as $city) {
             $citystr = preg_replace('/[0-9]+/', '', $city->city);
@@ -114,10 +113,9 @@ function getuserlocations($limit = 1500) {
     global $DB;
     $arr = [];
     $arr[] = ['lat', 'lon', 'City'];
-    if ($users = $DB->get_records_sql("SELECT u.city, boumc.lat, boumc.lng
-                                       FROM {user} u,  {block_online_users_map} boumc
-                                       WHERE boumc.userid = u.id AND u.suspended = 0
-                AND u.deleted = 0 GROUP BY city", [], 0, $limit)) {
+    $sql = 'SELECT u.city, boumc.lat, boumc.lng FROM {user} u,  {block_online_users_map} boumc
+             WHERE boumc.userid = u.id AND u.suspended = 0 AND u.deleted = 0 GROUP BY city';
+    if ($users = $DB->get_records_sql($sql, [], 0, $limit)) {
         foreach ($users as $user) {
             $arr[] = [$user->lat, $user->lng, $user->city];
         }
@@ -146,16 +144,10 @@ function get_html_googlemap() {
 function update_users_locations() {
     global $CFG, $DB;
     // Get all the users without a lat/lng.
-    $sql = "SELECT u.id, u.city, u.lastip, u.country, u.timezone, boumc.id AS b_id, u.firstname, u.lastname
-                FROM {user} u
-                LEFT OUTER JOIN {block_online_users_map} boumc
-                ON  u.id = boumc.userid
-                WHERE (boumc.id IS NULL
-                OR u.city != boumc.city
-                OR u.country != boumc.country)
-                AND u.city != ''
-                AND u.suspended = 0
-                AND u.deleted = 0";
+    $sql = "SELECT u.id, u.city, u.lastip, u.country, u.timezone, boumc.id AS b_id, u.firstname, u.lastname FROM {user} u
+   LEFT OUTER JOIN {block_online_users_map} boumc ON  u.id = boumc.userid
+             WHERE (boumc.id IS NULL OR u.city != boumc.city OR u.country != boumc.country)
+               AND u.city != '' AND u.suspended = 0 AND u.deleted = 0";
 
     $results = $DB->get_records_sql($sql, [], 0, 1);
     if (!$results) {
@@ -172,45 +164,39 @@ function update_users_locations() {
             $boumc->lng = 66;
             $boumc->city = $user->city;
             $boumc->country = $user->country;
-            $DB->insert_record("block_online_users_map", $boumc);
+            $DB->insert_record('block_online_users_map', $boumc);
             return true;
         }
         $city = preg_replace('/[0-9]+/', '', $user->city);
         if ($user->lastip != '' and $jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
-            $decodedresponse = json_decode($jsonresponse);
-            if ($decodedresponse->status === 'success') {
-                $txt .= "\n" . $user->id;
-                $txt .= "\n" . $user->b_id;
-                $txt .= "\n" . $decodedresponse->country;
-                $txt .= "\n" . $decodedresponse->countryCode;
-                $txt .= "\n" . $decodedresponse->city;
-                $txt .= "\n" . $decodedresponse->zip;
-                $txt .= "\n" . $decodedresponse->lat;
-                $txt .= "\n" . $decodedresponse->lon;
-                $txt .= "\n" . $decodedresponse->timezone;
+            $decode = json_decode($jsonresponse);
+            if ($decode->status === 'success') {
+                $arr = ['\n', $user->id, $user->b_id, $decode->country, $decode->countryCode,
+                        $decode->city, $decode->zip, $decode->lat, $decode->lon, $decode->timezone];
+                $txt = implode('\n', $arr);
                 $boumc->id = $user->b_id;
                 $boumc->userid = $user->id;
-                $boumc->lat = $decodedresponse->lat;
-                $boumc->lng = $decodedresponse->lon;
-                $boumc->city = $decodedresponse->city;
-                $boumc->country = $decodedresponse->countryCode;
+                $boumc->lat = $decode->lat;
+                $boumc->lng = $decode->lon;
+                $boumc->city = $decode->city;
+                $boumc->country = $decode->countryCode;
                 if (isset($user->b_id)) {
                     $boumc->id = $user->b_id;
-                    $DB->update_record("block_online_users_map", $boumc);
-                    $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-                    $txt .= "\nLocation updated for\n";
+                    $DB->update_record('block_online_users_map', $boumc);
+                    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
+                    $txt .= '\nLocation updated for\n';
                     $country = get_string($user->country, 'countries');
-                    $txt .= $user->firstname . " " . $user->lastname . ": " .$user->city . " - " . $country;
-                    $txt .= "\n" . $user->lastip;
+                    $txt .= $user->firstname . ' ' . $user->lastname . ': ' .$user->city . ' - ' . $country;
+                    $txt .= '\n' . $user->lastip;
                 } else {
-                    $DB->insert_record("block_online_users_map", $boumc);
-                    $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-                    $txt .= "\nLocation added for\n";
+                    $DB->insert_record('block_online_users_map', $boumc);
+                    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
+                    $txt .= '\nLocation added for\n';
                     $country = get_string($user->country, 'countries');
-                    $name = $user->firstname . " " . $user->lastname;
-                    $txt .= $name . ": " .$user->city . " - " . $country;
-                    $txt .= "\n" . $user->lastip;
-                    $names = explode(" ", $name);
+                    $name = $user->firstname . ' ' . $user->lastname;
+                    $txt .= $name . ': ' .$user->city . ' - ' . $country;
+                    $txt .= '\n' . $user->lastip;
+                    $names = explode(' ', $name);
                     foreach ($names as $name) {
                         $arr = ['firstname' => $name, 'country' => $user->country];
                         if ($candidates = $DB->get_records('user', $arr, 'id, firstname, lastname')) {
@@ -218,9 +204,9 @@ function update_users_locations() {
                                 if ($candidate->id === $user->id) {
                                     continue;
                                 }
-                                $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $candidate->id;
-                                $txt .= "\nPossible duplicate: ";
-                                $txt .= $candidate->firstname . " " . $candidate->lastname;
+                                $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $candidate->id;
+                                $txt .= '\nPossible duplicate: ';
+                                $txt .= $candidate->firstname . ' ' . $candidate->lastname;
                             }
                         }
                         $arr = ['lastname' => $name, 'country' => $user->country];
@@ -229,17 +215,19 @@ function update_users_locations() {
                                 if ($candidate->id === $user->id) {
                                     continue;
                                 }
-                                $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $candidate->id;
-                                $txt .= "\nPossible duplicate: ";
-                                $txt .= $candidate->firstname . " " . $candidate->lastname;
+                                $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $candidate->id;
+                                $txt .= '\nPossible duplicate: ';
+                                $txt .= $candidate->firstname . ' ' . $candidate->lastname;
                             }
                         }
                     }
                 }
                 if ($user->timezone === '99') {
                     try {
-                        $DB->set_field('user', 'timezone', $decodedresponse->timezone, ['id' => $user->id]);
+                        $DB->set_field('user', 'timezone', $decode->timezone, ['id' => $user->id]);
                     } catch (exception $e) {
+                        // No error_log check
+                        // @codingStandardsIgnoreLine
                         error_log('Error: block_online_users_map update error: ' . serialize($e));
                     }
                 }
@@ -272,13 +260,13 @@ function insertfail($user, $txt) {
     $boumc->lng = 0;
     $boumc->city = $user->city;
     $boumc->country = $user->country;
-    $DB->insert_record("block_online_users_map", $boumc);
-    $txt .= "\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
-    $txt .= "\nLocation NOT added for\n";
+    $DB->insert_record('block_online_users_map', $boumc);
+    $txt .= '\n' . $CFG->wwwroot . '/user/edit.php?id=' . $user->id;
+    $txt .= '\nLocation NOT added for\n';
     $country = get_string($user->country, 'countries');
-    $name = $user->firstname . " " . $user->lastname;
-    $txt .= $name . ": " .$user->city . " - " . $country;
-    $txt .= "\n" . $user->lastip;
+    $name = $user->firstname . ' ' . $user->lastname;
+    $txt .= $name . ': ' .$user->city . ' - ' . $country;
+    $txt .= '\n' . $user->lastip;
     return $txt;
 }
 
@@ -297,11 +285,11 @@ function geturlcontent($domain, $path) {
     $message .= "Connection: Close\r\n";
     $message .= "\r\n";
 
-    if ($CFG->proxyhost != "" && $CFG->proxyport != 0) {
+    if ($CFG->proxyhost != '' && $CFG->proxyport != 0) {
         $address = $CFG->proxyhost;
         $port = $CFG->proxyport;
     } else {
-        $address = str_replace("http://", "", $domain);
+        $address = str_replace('http://', '', $domain);
         $port = 80;
     }
 
@@ -311,7 +299,7 @@ function geturlcontent($domain, $path) {
     }
 
     fwrite($socket, $message);
-    $content = "";
+    $content = '';
     while (!feof($socket)) {
         $content .= fgets($socket, 1024);
     }
@@ -327,7 +315,7 @@ function geturlcontent($domain, $path) {
  * @return string body of the returned request
  */
 function extractbody($response) {
-    $crlf = "\r\n";
+    $crlf = '\r\n';
     // Split header and body.
     $pos = strpos($response, $crlf . $crlf);
     if ($pos === false) {
@@ -370,9 +358,7 @@ function gettimetoshowusers() {
 function getcurrentuserlocations() {
     global $USER, $DB;
     $coords = [];
-    $sql = "SELECT boumc.userid, boumc.lat, boumc.lng
-            FROM {block_online_users_map} boumc
-            WHERE userid = ?";
+    $sql = 'SELECT boumc.userid, boumc.lat, boumc.lng FROM {block_online_users_map} boumc WHERE userid = ?';
     $c = $DB->get_record_sql($sql, [$USER->id]);
     if ($c) {
         $coords['lat'] = $c->lat;
