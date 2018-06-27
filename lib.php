@@ -142,6 +142,7 @@ function get_html_googlemap() {
  * @uses $CFG,$DB
  */
 function update_users_locations() {
+    return true;
     global $CFG, $DB;
     // Get all the users without a lat/lng.
     $sql = "SELECT u.id, u.city, u.lastip, u.country, u.timezone, boumc.id AS b_id, u.firstname, u.lastname FROM {user} u

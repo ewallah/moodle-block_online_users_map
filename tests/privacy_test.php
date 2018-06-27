@@ -42,6 +42,8 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
     private $user1;
     /** @var user2 second user */
     private $user2;
+    /** @var course a course */
+    private $course;
 
     /**
      * Basic setup for these tests.
@@ -60,6 +62,8 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
         $this->user2 = self::getDataGenerator()->create_user($user);
         update_users_locations();
         update_users_locations();
+        $datagenerator = $this->getDataGenerator();
+        $this->course = $datagenerator->create_course();
     }
 
     /**
@@ -85,6 +89,15 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
      * Check the exporting of locations for a user.
      */
     public function test_export_maps() {
+        global $DB;
+        $studentrole = $DB->get_record('role', ['shortname' => 'student']);
+        $maninstance = $DB->get_record('enrol', ['courseid' => $this->course->id, 'enrol'=>'manual'], '*', MUST_EXIST);
+        $manplugin = enrol_get_plugin('manual');
+        $manplugin->enrol_user($maninstance, $this->user1->id, $studentrole->id);
+        $ctx = context_course::instance($this->course->id);
+        $manager = $this->get_block_manager(['region-a'], $ctx);
+        $manager->add_block('online_users_map', 'region-a', 0, false);
+        $manager->load_blocks();
         $context = context_user::instance($this->user1->id);
         $this->export_context_data_for_user($this->user1->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
@@ -92,7 +105,7 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
         $context = context_user::instance($this->user2->id);
         $this->export_context_data_for_user($this->user2->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
-        $this->assertTrue($writer->has_any_data());
+        $this->assertFalse($writer->has_any_data());
     }
 
     /**
