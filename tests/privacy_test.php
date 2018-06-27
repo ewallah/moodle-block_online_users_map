@@ -89,15 +89,7 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
      * Check the exporting of locations for a user.
      */
     public function test_export_maps() {
-        global $DB;
-        $studentrole = $DB->get_record('role', ['shortname' => 'student']);
-        $maninstance = $DB->get_record('enrol', ['courseid' => $this->course->id, 'enrol'=>'manual'], '*', MUST_EXIST);
-        $manplugin = enrol_get_plugin('manual');
-        $manplugin->enrol_user($maninstance, $this->user1->id, $studentrole->id);
-        $ctx = context_course::instance($this->course->id);
-        $manager = $this->get_block_manager(['region-a'], $ctx);
-        $manager->add_block('online_users_map', 'region-a', 0, false);
-        $manager->load_blocks();
+        $manager = $this->get_block_manager();
         $context = context_user::instance($this->user1->id);
         $this->export_context_data_for_user($this->user1->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
@@ -105,7 +97,7 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
         $context = context_user::instance($this->user2->id);
         $this->export_context_data_for_user($this->user2->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
-        $this->assertFalse($writer->has_any_data());
+        $this->assertTrue($writer->has_any_data());
     }
 
     /**
@@ -124,6 +116,7 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
      * Tests deletion of locations for a specified user.
      */
     public function test_delete_maps_for_user() {
+        $manager = $this->get_block_manager();
         $context = context_user::instance($this->user1->id);
         $list = new core_privacy\tests\request\approved_contextlist($this->user1, 'block_online_users_map', []);
         \block_online_users_map\privacy\provider::delete_data_for_user($list);
@@ -134,5 +127,31 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
         $this->export_context_data_for_user($this->user2->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
         $this->assertTrue($writer->has_any_data());
+    }
+
+    /**
+     * Get the block manager.
+     *
+     * @param context $context The context.
+     * @return block_manager
+     */
+    protected function get_block_manager() {
+        global $DB;
+        $regions = ['region-a'];
+        $studentrole = $DB->get_record('role', ['shortname' => 'student']);
+        $maninstance = $DB->get_record('enrol', ['courseid' => $this->course->id, 'enrol' => 'manual'], '*', MUST_EXIST);
+        $manplugin = enrol_get_plugin('manual');
+        $manplugin->enrol_user($maninstance, $this->user1->id, $studentrole->id);
+        $page = new moodle_page();
+        $page->set_context(context_course::instance($this->course->id));
+        $page->set_pagetype('page-type');
+        $page->set_subpage('');
+        $page->set_url(new moodle_url('/'));
+        $blockmanager = new block_manager($page);
+        $blockmanager->add_regions($regions, false);
+        $blockmanager->set_default_region($regions[0]);
+        $blockmanager->add_block('online_users_map', 'region-a', 0, false);
+        $blockmanager->load_blocks();
+        return $blockmanager;
     }
 }
