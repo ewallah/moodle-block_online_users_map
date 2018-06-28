@@ -362,7 +362,7 @@ function phptojson($objects, $name, $callback='') {
  * @param object $user user object
  * @return string of the user link
  */
-private function puserlnk($user)
+function puserlnk($user)
    $url = new \moodle_url('/user/edit.php', ['id' => $user->id]);
    return new \html_writer::link($url, $user->firstname . ' ' . $user->lastname);
 }
