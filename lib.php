@@ -172,7 +172,7 @@ function update_users_locations() {
                 $country = get_string($user->country, 'countries');
                 $lnk = puserlnk($user) . ': ' .$user->city . ' - ' . $country;
                 $arr = [$lnk, "\r\n", $user->lastip, $user->id, $user->b_id, $decode->country, $decode->countryCode,
-                        $decode->city, $decode->zip, $decode->lat, $decode->lon, $decode->timezone, "\r\n",];
+                        $decode->city, $decode->zip, $decode->lat, $decode->lon, $decode->timezone, "\r\n"];
                 $boumc->userid = $user->id;
                 $boumc->lat = $decode->lat;
                 $boumc->lng = $decode->lon;
