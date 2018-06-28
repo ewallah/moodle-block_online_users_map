@@ -142,7 +142,7 @@ function get_html_googlemap() {
  * @uses $CFG,$DB
  */
 function update_users_locations() {
-    global $CFG, $DB;
+    global $DB;
     // Get all the users without a lat/lng.
     $sql = "SELECT u.id, u.city, u.lastip, u.country, u.timezone, boumc.id AS b_id, u.firstname, u.lastname FROM {user} u
    LEFT OUTER JOIN {block_online_users_map} boumc ON  u.id = boumc.userid
@@ -153,7 +153,6 @@ function update_users_locations() {
     if (!$results) {
         return true;
     }
-    $txt = '';
     // Loop through results and get location for each user.
     foreach ($results as $user) {
         // Get the coordinates.
