@@ -147,7 +147,7 @@ function update_users_locations() {
     $sql = "SELECT u.id, u.city, u.lastip, u.country, u.timezone, boumc.id AS b_id, u.firstname, u.lastname FROM {user} u
    LEFT OUTER JOIN {block_online_users_map} boumc ON  u.id = boumc.userid
              WHERE (boumc.id IS NULL OR u.city != boumc.city OR u.country != boumc.country)
-               AND u.city != '' AND u.suspended = 0 AND u.deleted = 0";
+               AND u.lastip != '' AND u.city != '' AND u.suspended = 0 AND u.deleted = 0";
 
     $results = $DB->get_records_sql($sql, [], 0, 1);
     if (!$results) {
@@ -164,16 +164,15 @@ function update_users_locations() {
             $boumc->lng = 66;
             $boumc->city = $user->city;
             $boumc->country = $user->country;
-            $DB->insert_record('block_online_users_map', $boumc);
-            return true;
+            return $DB->insert_record('block_online_users_map', $boumc);
         }
-        if ($user->lastip != '' and $jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
+        if ($jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
             $decode = json_decode($jsonresponse);
             if ($decode->status === 'success') {
-                $arr = ["\r\n", $user->id, $user->b_id, $decode->country, $decode->countryCode,
-                        $decode->city, $decode->zip, $decode->lat, $decode->lon, $decode->timezone];
-                $txt = implode("\r\n", $arr);
-                $boumc->id = $user->b_id;
+                $country = get_string($user->country, 'countries');
+                $lnk = puserlnk($user) . ': ' .$user->city . ' - ' . $country;
+                $arr = [$lnk, "\r\n", $user->lastip, $user->id, $user->b_id, $decode->country, $decode->countryCode,
+                        $decode->city, $decode->zip, $decode->lat, $decode->lon, $decode->timezone, "\r\n",];
                 $boumc->userid = $user->id;
                 $boumc->lat = $decode->lat;
                 $boumc->lng = $decode->lon;
@@ -182,35 +181,22 @@ function update_users_locations() {
                 if (isset($user->b_id)) {
                     $boumc->id = $user->b_id;
                     $DB->update_record('block_online_users_map', $boumc);
-                    $txt .= "\r\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id . "\r\nLocation updated for\r\n";
-                    $country = get_string($user->country, 'countries');
-                    $txt .= $user->firstname . ' ' . $user->lastname . ': ' .$user->city . " - $country\r\n" . $user->lastip;
+                    $arr[] = 'Location updated';
                 } else {
                     $DB->insert_record('block_online_users_map', $boumc);
-                    $txt .= "\r\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id . "\r\nLocation added for\r\n";
-                    $country = get_string($user->country, 'countries');
-                    $name = $user->firstname . ' ' . $user->lastname;
-                    $txt .= $name . ': ' .$user->city . ' - ' . $country . "\r\n" . $user->lastip;
-                    $names = explode(' ', $name);
+                    $arr[] = 'Location added';
+                    $names = [$user->firstname, $user->lastname];
+                    $fields = ['firstname', 'lastname'];
                     foreach ($names as $name) {
-                        $arr = ['firstname' => $name, 'country' => $user->country];
-                        if ($candidates = $DB->get_records('user', $arr, 'id, firstname, lastname')) {
-                            foreach ($candidates as $candidate) {
-                                if ($candidate->id === $user->id) {
-                                    continue;
+                        foreach ($fields as $field) {
+                            $orr = [$field => $name, 'country' => $user->country];
+                            if ($candidates = $DB->get_records('user', $orr, 'id, firstname, lastname')) {
+                                foreach ($candidates as $candidate) {
+                                    if ($candidate->id === $user->id) {
+                                        continue;
+                                    }
+                                    $arr[] = 'Possible duplicate: ' . puserlnk($candidate);
                                 }
-                                $txt .= "\r\n" . $CFG->wwwroot . '/user/edit.php?id=' . $candidate->id;
-                                $txt .= "\r\nPossible duplicate: " . $candidate->firstname . ' ' . $candidate->lastname;
-                            }
-                        }
-                        $arr = ['lastname' => $name, 'country' => $user->country];
-                        if ($candidates = $DB->get_records('user', $arr, 'id, firstname, lastname')) {
-                            foreach ($candidates as $candidate) {
-                                if ($candidate->id === $user->id) {
-                                    continue;
-                                }
-                                $txt .= "\r\n" . $CFG->wwwroot . '/user/edit.php?id=' . $candidate->id;
-                                $txt .= "\r\nPossible duplicate: " . $candidate->firstname . ' ' . $candidate->lastname;
                             }
                         }
                     }
@@ -224,41 +210,13 @@ function update_users_locations() {
                         error_log('Error: block_online_users_map update error: ' . serialize($e));
                     }
                 }
-            } else {
-                // Failed.
-                $txt .= insertfail($user, $txt);
             }
-        } else {
-            $txt .= insertfail($user, $txt);
         }
-        if ($txt != '' ) {
-            email_to_user(get_admin(), get_admin(), 'Location', $txt);
+        if (count($arr) > 0) {
+            email_to_user(get_admin(), get_admin(), 'Location', implode("\r\n", $arr));
         }
     }
     return true;
-}
-
-/**
- * Insert a failed location
- *
- * @param string $user
- * @param string $txt
- * @return String body of the returned request
- */
-function insertfail($user, $txt) {
-    global $CFG, $DB;
-    $boumc = new stdClass;
-    $boumc->userid = $user->id;
-    $boumc->lat = 0;
-    $boumc->lng = 0;
-    $boumc->city = $user->city;
-    $boumc->country = $user->country;
-    $DB->insert_record('block_online_users_map', $boumc);
-    $txt .= "\r\n" . $CFG->wwwroot . '/user/edit.php?id=' . $user->id . "\r\nLocation NOT added for\r\n";
-    $country = get_string($user->country, 'countries');
-    $name = $user->firstname . ' ' . $user->lastname;
-    $txt .= $name . ': ' .$user->city . ' - ' . $country . "\r\n" . $user->lastip;
-    return $txt;
 }
 
 /**
@@ -396,4 +354,15 @@ function phptojson($objects, $name, $callback='') {
         $str .= ');';
     }
     return $str;
+}
+
+/**
+ * Create a lnk to a user
+ *
+ * @param object $user user object
+ * @return string of the user link
+ */
+private function puserlnk($user)
+   $url = new \moodle_url('/user/edit.php', ['id' => $user->id]);
+   return new \html_writer::link($url, $user->firstname . ' ' . $user->lastname);
 }

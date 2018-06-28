@@ -55,6 +55,7 @@ class block_online_users_map_privacy_testcase extends provider_testcase {
         $user = new stdClass();
         $user->country = 'AU';
         $user->city = 'Perth';
+        $user->lastip = '8.8.8.8';
         $this->user1 = self::getDataGenerator()->create_user($user);
         $user = new stdClass();
         $user->country = 'BE';
