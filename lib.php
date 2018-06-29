@@ -363,5 +363,5 @@ function phptojson($objects, $name, $callback='') {
  */
 function puserlnk($user) {
     $url = new \moodle_url('/user/editadvanced.php', ['id' => $user->id]);
-    return "$url $user->firstname $user->lastname</a>";
+    return "$url $user->firstname $user->lastname";
 }
