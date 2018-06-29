@@ -175,7 +175,7 @@ function update_users_locations() {
                 $boumc->userid = $user->id;
                 $boumc->lat = $decode->lat;
                 $boumc->lng = $decode->lon;
-                $boumc->city = $decode->city;
+                $boumc->city = $user->city;
                 $boumc->country = $decode->countryCode;
                 if (isset($user->b_id)) {
                     $boumc->id = $user->b_id;
