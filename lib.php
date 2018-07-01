@@ -149,7 +149,7 @@ function update_users_locations() {
              WHERE (boumc.id IS NULL OR u.city != boumc.city OR u.country != boumc.country)
                AND u.lastip != '' AND u.city != '' AND u.suspended = 0 AND u.deleted = 0";
 
-    $results = $DB->get_records_sql($sql, [], 0, 1);
+    $results = $DB->get_records_sql($sql, [], 0, 2);
     if (!$results) {
         return true;
     }
@@ -176,7 +176,7 @@ function update_users_locations() {
                 $boumc->lat = $decode->lat;
                 $boumc->lng = $decode->lon;
                 $boumc->city = $user->city;
-                $boumc->country = $decode->countryCode;
+                $boumc->country = $user->country;
                 if (isset($user->b_id)) {
                     $boumc->id = $user->b_id;
                     $DB->update_record('block_online_users_map', $boumc);
