@@ -28,6 +28,8 @@ namespace block_online_users_map\privacy;
 
 use \core_privacy\local\request\approved_contextlist;
 use \core_privacy\local\request\contextlist;
+use \core_privacy\local\request\approved_userlist;
+use \core_privacy\local\request\userlist;
 use \core_privacy\local\request\writer;
 use \core_privacy\local\request\deletion_criteria;
 use \core_privacy\local\metadata\collection;
@@ -43,7 +45,9 @@ defined('MOODLE_INTERNAL') || die();
  * @author  Alex Little
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\plugin\provider {
+class provider implements \core_privacy\local\metadata\provider,
+                          \core_privacy\local\request\plugin\provider,
+                          \core_privacy\local\request\core_userlist_provider {
 
     /**
      * Returns information about how block_community stores its data.
@@ -89,17 +93,15 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         global $DB;
 
         $contexts = $contextlist->get_contexts();
-        if (count($contexts) == 0) {
-            return;
-        }
-        $context = reset($contexts);
-        if ($context->contextlevel !== CONTEXT_USER) {
-            return;
-        }
-        $user = $contextlist->get_user();
-        if ($data = $DB->get_record('block_online_users_map', ['userid' => $user->id])) {
-            unset($data->id);
-            writer::with_context($context)->export_data([], $data);
+        if (count($contexts) > 0) {
+            $context = reset($contexts);
+            if ($context->contextlevel === CONTEXT_USER) {
+                $user = $contextlist->get_user();
+                if ($data = $DB->get_record('block_online_users_map', ['userid' => $user->id])) {
+                    unset($data->id);
+                    writer::with_context($context)->export_data([], $data);
+                }
+            }
         }
     }
 
@@ -120,9 +122,34 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
-        if ($context->contextlevel !== CONTEXT_USER) {
-            return;
+        if ($context->contextlevel === CONTEXT_USER) {
+            $DB->delete_records('block_online_users_map', ['userid' => $context->id]);
         }
-        $DB->execute("DELETE FROM {block_online_users_map}");
+    }
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+        if (is_a($context, \context_user::class)) {
+            $userlist->add_from_sql('userid', "SELECT userid FROM {block_online_users_map}", []);
+        }
+    }
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist       $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+        $context = $userlist->get_context();
+        if (is_a($context, \context_user::class)) {
+            list($insql, $inparams) = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
+            $DB->delete_records_select('block_online_users_map', "userid $insql", $inparams);
+        }
     }
 }
