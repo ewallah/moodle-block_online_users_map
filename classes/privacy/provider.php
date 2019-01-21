@@ -112,7 +112,7 @@ class provider implements \core_privacy\local\metadata\provider,
      */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
-        // $DB->delete_records('block_online_users_map', ['userid' => $contextlist->get_user()->id]);
+        $DB->delete_records('block_online_users_map', ['userid' => $contextlist->get_user()->id]);
     }
 
     /**
@@ -123,7 +123,7 @@ class provider implements \core_privacy\local\metadata\provider,
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
         if ($context->contextlevel === CONTEXT_USER) {
-            // $DB->delete_records('block_online_users_map', ['userid' => $context->id]);
+            $DB->delete_records('block_online_users_map', ['userid' => $context->id]);
         }
     }
 
@@ -149,7 +149,7 @@ class provider implements \core_privacy\local\metadata\provider,
         $context = $userlist->get_context();
         if (is_a($context, \context_user::class)) {
             list($insql, $inparams) = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
-            // $DB->delete_records_select('block_online_users_map', "userid $insql", $inparams);
+            $DB->delete_records_select('block_online_users_map', "userid $insql", $inparams);
         }
     }
 }
