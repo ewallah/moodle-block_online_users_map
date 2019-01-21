@@ -149,7 +149,7 @@ function update_users_locations() {
              WHERE (boumc.id IS NULL OR u.city != boumc.city OR u.country != boumc.country)
                AND u.lastip != '' AND u.city != '' AND u.suspended = 0 AND u.deleted = 0";
 
-    $results = $DB->get_records_sql($sql, [], 0, 2);
+    $results = $DB->get_records_sql($sql, [], 0, 5);
     if (!$results) {
         return true;
     }
@@ -165,6 +165,8 @@ function update_users_locations() {
             $boumc->country = $user->country;
             return $DB->insert_record('block_online_users_map', $boumc);
         }
+
+        $arr = []; 
         if ($jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
             $decode = json_decode($jsonresponse);
             if ($decode->status === 'success') {
@@ -212,7 +214,8 @@ function update_users_locations() {
             }
         }
         if (count($arr) > 0) {
-            email_to_user(get_admin(), get_admin(), 'Location', implode("\r\n", $arr));
+            $admin = get_admin();
+            email_to_user($admin, $admin, 'Location', implode("\r\n", $arr));
         }
     }
     return true;
