@@ -166,7 +166,7 @@ function update_users_locations() {
             return $DB->insert_record('block_online_users_map', $boumc);
         }
 
-        $arr = []; 
+        $arr = [];
         if ($jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
             $decode = json_decode($jsonresponse);
             if ($decode->status === 'success') {
