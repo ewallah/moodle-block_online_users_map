@@ -5,11 +5,17 @@ notifications:
     recipients:
         - rdebleu@eWallah.net
 
+dist: bionic
+
 sudo: required
+
+services:
+  - mysql
 
 addons:
   firefox: "47.0.1"
   postgresql: "9.6"
+  chrome: stable
   apt:
     packages:
       - openjdk-8-jre-headless
@@ -22,15 +28,20 @@ cache:
 
 php:
  - 7.2
- - 7.3
 
 env:
-  - DB=pgsql MOODLE_BRANCH=MOODLE_36_STABLE
   - DB=pgsql MOODLE_BRANCH=master
-  - DB=mysqli MOODLE_BRANCH=MOODLE_36_STABLE
   - DB=mysqli MOODLE_BRANCH=master
-  - DB=mariadb MOODLE_BRANCH=MOODLE_36_STABLE
-  - DB=mariadb MOODLE_BRANCH=master
+
+matrix:
+  include:
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_38_STABLE
+    - php: 7.3
+      env: DB=pgsql MOODLE_BRANCH=master
+
   
 before_install:
   - phpenv config-rm xdebug.ini
@@ -39,13 +50,16 @@ before_install:
   - cd ../..
   - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://127.0.0.1 &
 
 install:
   - moodle-plugin-ci install
 
 script:
+  - /home/travis/build/moodle/vendor/bin/phpunit --colors "provider_testcase" /home/travis/build/moodle/privacy/tests/provider_test.php
+  - /home/travis/build/moodle/vendor/bin/phpunit --colors "tool_dataprivacy_expired_contexts_testcase" /home/travis/build/moodle/admin/tool/dataprivacy/tests/expired_contexts_test.php
   - moodle-plugin-ci phplint
-  #- moodle-plugin-ci phpcpd
+  - moodle-plugin-ci phpcpd
   - moodle-plugin-ci phpmd
   - moodle-plugin-ci phpdoc
   - moodle-plugin-ci codechecker
@@ -56,7 +70,3 @@ script:
   - moodle-plugin-ci phpunit --coverage-text
   - moodle-plugin-ci behat
   - moodle-plugin-ci behat --profile chrome
-  - moodle-plugin-ci phpunit --coverage-clover
-
-after_success:
-  - moodle-plugin-ci coveralls-upload

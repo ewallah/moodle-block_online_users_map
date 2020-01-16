@@ -27,14 +27,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'block/online_users_map:myaddinstance' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => ['user' => CAP_ALLOW],
-        'clonepermissionsfrom' => 'moodle/my:manageblocks'],
     'block/online_users_map:addinstance' => [
-        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
-        'archetypes' => ['editingteacher' => CAP_ALLOW, 'manager' => CAP_ALLOW],
+        'archetypes' => ['manager' => CAP_ALLOW],
         'clonepermissionsfrom' => 'moodle/site:manageblocks']];
