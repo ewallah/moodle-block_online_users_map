@@ -73,6 +73,7 @@ class block_online_users_map_other_testcase extends advanced_testcase {
         $blockmanager->load_blocks();
         $blocks = $blockmanager->get_blocks_for_region('region-a');
         $this->block = $blocks[0];
+
     }
 
     /**
@@ -83,9 +84,42 @@ class block_online_users_map_other_testcase extends advanced_testcase {
         $this->assertTrue($this->block->has_config());
         $this->assertFalse($this->block->instance_allow_config());
         $this->assertNotEmpty($this->block->title);
+        $this->assertEmpty($this->block->applicable_formats());
+        $this->assertEquals('', $this->block->get_content()->text);
+        $this->assertEquals('', $this->block->get_content()->footer);
+
+        $this->setAdminUser();
+        $this->assertFalse($this->block->instance_allow_multiple());
+        $this->assertTrue($this->block->has_config());
+        $this->assertFalse($this->block->instance_allow_config());
+        $this->assertNotEmpty($this->block->title);
         $this->assertNotEmpty($this->block->applicable_formats());
         $this->assertEquals('', $this->block->get_content()->text);
-        $this->assertEquals('', $this->block->get_content()->text);
+        $this->assertEquals('', $this->block->get_content()->footer);
         $this->assertTrue($this->block->cron());
+    }
+
+    /**
+     * Test other course.
+     */
+    public function test_other_course() {
+        $course = self::getDataGenerator()->create_course();
+        $regions = ['region-a'];
+        $page = new moodle_page();
+        $page->set_context(context_course::instance($course->id));
+        $page->set_pagetype('page-type');
+        $page->set_subpage('');
+        $page->set_url(new moodle_url('/'));
+        $blockmanager = new block_manager($page);
+        $blockmanager->add_regions($regions, false);
+        $blockmanager->set_default_region($regions[0]);
+        $blockmanager->add_block('online_users_map', 'region-a', 0, false);
+        $blockmanager->load_blocks();
+        $blocks = $blockmanager->get_blocks_for_region('region-a');
+        $block = $blocks[0];
+        $this->assertNotEmpty($block->title);
+        $this->assertEquals('', $block->get_content()->text);
+        $this->assertEquals('', $block->get_content()->footer);
+        $this->assertTrue($block->cron());
     }
 }
