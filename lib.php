@@ -139,7 +139,7 @@ function get_html_googlemap() {
 
 /**
  * Updates the lat/lng for users
- * @uses $CFG,$DB
+ * @uses $DB
  */
 function update_users_locations() {
     global $DB;
@@ -149,7 +149,7 @@ function update_users_locations() {
              WHERE (boumc.id IS NULL OR u.city != boumc.city OR u.country != boumc.country)
                AND u.lastip != '' AND u.city != '' AND u.suspended = 0 AND u.deleted = 0";
 
-    $results = $DB->get_records_sql($sql, [], 0, 5);
+    $results = $DB->get_records_sql($sql, [], 0, 15);
     if (!$results) {
         return true;
     }
@@ -168,6 +168,7 @@ function update_users_locations() {
 
         $arr = [];
         if ($jsonresponse = file_get_contents('http://ip-api.com/json/' . $user->lastip)) {
+            mtrace('Online users map: ' . $user->id . ' - ' . $user->lastip);
             $decode = json_decode($jsonresponse);
             if ($decode->status === 'success') {
                 $country = get_string($user->country, 'countries');
@@ -210,6 +211,10 @@ function update_users_locations() {
                         // @codingStandardsIgnoreLine
                         error_log('Error: block_online_users_map update error: ' . serialize($e));
                     }
+                }
+            } else {
+                if ($decode->message == "private range") {
+                    $DB->set_field('user', 'lastip', '', ['id' => $user->id]);
                 }
             }
         }
