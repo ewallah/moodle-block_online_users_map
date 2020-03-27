@@ -58,10 +58,7 @@ class block_online_users_map extends block_base {
      * @return array
      */
     public function applicable_formats() {
-        if (has_capability('moodle/site:config', context_system::instance())) {
-            return ['site' => true, 'site-index' => true];
-        }
-        return [];
+        return ['site' => true, 'site-index' => true];
     }
 
     /**
