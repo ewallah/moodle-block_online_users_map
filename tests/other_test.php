@@ -84,7 +84,7 @@ class block_online_users_map_other_testcase extends advanced_testcase {
         $this->assertTrue($this->block->has_config());
         $this->assertFalse($this->block->instance_allow_config());
         $this->assertNotEmpty($this->block->title);
-        $this->assertEmpty($this->block->applicable_formats());
+        $this->assertCount(2, $this->block->applicable_formats());
         $this->assertEquals('', $this->block->get_content()->text);
         $this->assertEquals('', $this->block->get_content()->footer);
 
