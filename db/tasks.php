@@ -15,19 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Online Users Map block - Customised online users map based on work of Alex Little
+ * Task for online_users_map block
  *
  * @package   block_online_users_map
- * @copyright 2018 onwards iplusacademy  {@link https://www.iplusacademy.org}
- * @author    Renaat Debleu (www.ewallah.net)
+ * @copyright 2018 Renaat Debleu <rdebleu@eWallah.net>
+ * @author    Renaat Debleu
  * @author    Alex Little
- * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2020052300;
-$plugin->requires = 2018051700;
-$plugin->release = '3.5+';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->component = 'block_online_users_map';
+$tasks = [['classname' => '\blocks\online_users_map\task\cron_task', 'blocking' => 0, 'minute' => '17', 'hour' => '*', 'day' => '*',
+           'dayofweek' => '*', 'month' => '*']];

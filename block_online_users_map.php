@@ -74,7 +74,7 @@ class block_online_users_map extends block_base {
      * return string
      */
     public function get_content() {
-        global $COURSE, $PAGE;
+        global $COURSE;
 
         if ($this->content !== null) {
             return $this->content;
@@ -89,20 +89,11 @@ class block_online_users_map extends block_base {
         }
         if ($COURSE->id == SITEID) {
             if ($this->instance->visible) {
-                $PAGE->requires->js(new moodle_url('https://www.google.com/jsapi'), true);
+                $this->page->requires->js(new moodle_url('https://www.google.com/jsapi'), true);
             }
         } else {
             $this->content->text = get_html_googlemap();
         }
         return $this->content;
-    }
-
-    /**
-     * Gets cron function
-     * return boolean
-     */
-    public function cron() {
-        update_users_locations();
-        return true;
     }
 }

@@ -20,8 +20,8 @@
  * @package   block_online_users_map
  * @copyright 2018 onwards iplusacademy  {@link https://www.iplusacademy.org}
  * @author    Renaat Debleu (www.ewallah.net)
- * @author Alex Little
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @author    Alex Little
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
 defined('MOODLE_INTERNAL') || die();

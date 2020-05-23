@@ -33,6 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @category   test
  * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers block_online_users_map
  */
 class block_online_users_map_other_testcase extends advanced_testcase {
 
@@ -96,7 +97,6 @@ class block_online_users_map_other_testcase extends advanced_testcase {
         $this->assertNotEmpty($this->block->applicable_formats());
         $this->assertEquals('', $this->block->get_content()->text);
         $this->assertEquals('', $this->block->get_content()->footer);
-        $this->assertTrue($this->block->cron());
     }
 
     /**
@@ -120,6 +120,20 @@ class block_online_users_map_other_testcase extends advanced_testcase {
         $this->assertNotEmpty($block->title);
         $this->assertEquals('', $block->get_content()->text);
         $this->assertEquals('', $block->get_content()->footer);
-        $this->assertTrue($block->cron());
+    }
+
+    /**
+     * Test cron.
+     * @covers \block_online_users_map\task\cron_task
+     */
+    public function test_cron_task() {
+        self::getDataGenerator()->create_user(['email' => 'tst@iplussolutions.org']);
+        $tsk = new \block_online_users_map\task\cron_task();
+        $this->assertEquals('block online users task', $tsk->get_name());
+        ob_start();
+        $this->assertEquals(true, $tsk->execute());
+        $out = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals('', $out);
     }
 }

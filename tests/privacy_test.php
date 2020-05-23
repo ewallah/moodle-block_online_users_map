@@ -35,6 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @category   test
  * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers block_online_users_map\privacy\provider
  */
 class block_online_users_map_privacy_testcase extends provider_testcase {
 
