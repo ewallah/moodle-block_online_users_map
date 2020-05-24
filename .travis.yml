@@ -44,7 +44,7 @@ install:
   - moodle-plugin-ci install
 
 script:
-  - moodle-plugin-ci phpunit --coverage-text
+  - moodle-plugin-ci phpunit --coverage-text --coverage-clover
   - moodle-plugin-ci behat
   - moodle-plugin-ci behat --dump /home/travis/build/moodle/blocks/admin_bookmarks
   - /home/travis/build/moodle/vendor/bin/phpunit "provider_testcase" /home/travis/build/moodle/privacy/tests/provider_test.php
