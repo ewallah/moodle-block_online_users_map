@@ -21,16 +21,3 @@ Feature: The online users map block allow you to see who is currently online on 
     And I log in as "student1"
     And I am on site homepage
     And I should not see "Where our students come from"
-
-  @javascript
-  Scenario: The online users block on the front page is shown with theme
-    Given I log in as "admin"
-    And I am on site homepage
-    And I navigate to "Turn editing on" in current page administration
-    When I add the "Online Users Map" block
-    Then I should see "Where our students come from"
-    And I log out
-    And I trigger cron
-    And I log in as "student2"
-    And I am on site homepage
-    Then I should not see "Where our students come from"
