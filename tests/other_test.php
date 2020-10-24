@@ -46,7 +46,7 @@ class block_online_users_map_other_testcase extends advanced_testcase {
     /**
      * Basic setup for these tests.
      */
-    public function setUp() {
+    public function setUp():void {
         global $CFG;
         require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
         $this->resetAfterTest(true);
