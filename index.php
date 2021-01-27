@@ -139,8 +139,8 @@ if ($cou != '') {
     $opt = "'showTip': true, 'mapType' : 'terrain', 'zoomLevel': 2, 'colorAxis': {'colors': ['#B5C202', '#106B52']}";
 }
 if ($sids != '') {
-    echo iplus_gchart($char, $sty, $cols, $rows, $opt);  //, $sids, 'blocks/online_users_map/index.php?country=');
+    echo iplus_gchart($char, $sty, $cols, $rows, $opt);
 } else {
-   echo iplus_gchart($char, $sty, $cols, $rows, $opt);
+    echo iplus_gchart($char, $sty, $cols, $rows, $opt);
 }
 echo $OUTPUT->footer();
