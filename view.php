@@ -58,7 +58,7 @@ if ($cou != '') {
         if ($countries = $DB->get_records_sql($sql)) {
             foreach ($countries as $country) {
                 $countrystr = addslashes_js(get_string($country->country, 'countries'));
-                $rows[] = "{c:[{v:'$country->country'}, {v:$country->cnt}, {v:'$countrystr'}]}";
+                $rows[] = "{c:[{v:'$country->country'}, {v:$country->cnt}, {v:'$countrystr $country->cnt'}]}";
             }
             $rows = implode(',', $rows);
         }
@@ -98,7 +98,7 @@ if ($cou != '') {
     if ($countries = $DB->get_records_sql($sql)) {
         foreach ($countries as $country) {
             $countrystr = addslashes_js(get_string($country->country, 'countries'));
-            $rows[] = "{c:[{v:'$country->country'}, {v:$country->cnt}, {v:'$countrystr'}]}";
+            $rows[] = "{c:[{v:'$country->country'}, {v:$country->cnt}, {v:'$countrystr $country->cnt'}]}";
         }
         $rows = implode(',', $rows);
     }

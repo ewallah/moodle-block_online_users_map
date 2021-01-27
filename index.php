@@ -47,6 +47,8 @@ echo html_writer::tag('h2', get_string('participants'));
 echo $OUTPUT->box_end();
 
 $rows = [];
+$ids = [];
+$sids = '';
 $char = 'GeoChart';
 $sty = 'min-width:100%;';
 $opt = "'datalessRegionColor': '#fff', 'colorAxis': {'colors': ['#B5C202', '#106B52']}, 'backgroundColor':'transparent'";
@@ -54,25 +56,30 @@ $opt = "'datalessRegionColor': '#fff', 'colorAxis': {'colors': ['#B5C202', '#106
 if ($cou != '') {
     $cols = "{type: 'string'}, {type: 'number'}, { type: 'string', 'role': 'tooltip'}";
     if (strlen($cou) > 2) {
+        $ids = [];
         $sql = "SELECT country, count(1) AS cnt FROM {user}
-                WHERE country > '' AND suspended = 0 AND deleted = 0 GROUP BY country";
+                WHERE country > '' GROUP BY country";
         if ($countries = $DB->get_records_sql($sql)) {
             foreach ($countries as $country) {
                 $countrystr = addslashes_js(get_string($country->country, 'countries'));
-                $rows[] = "{c:[{v:'$country->country'}, {v:$country->cnt}, {v:'$countrystr'}]}";
+                $rows[] = "{c:[{v:'$country->country'}, {v:$country->cnt}, {v:'$countrystr $country->cnt'}]}";
+                if (strlen($country->country) == 2) {
+                    $ids[] = "['$country->country']";
+                }
             }
             $rows = implode(',', $rows);
+            $sids = implode(',', $ids);
         }
         $opt .= ", 'region': '$cou'";
     } else {
         $cou = strtoupper($cou);
         $sql = "SELECT city, count(1) AS cnt FROM {user}
-                WHERE city > '' AND suspended = 0 AND deleted = 0 AND country = ? GROUP BY city";
+                WHERE city > '' AND country = ? GROUP BY city";
         if ($cities = $DB->get_records_sql($sql, [$cou])) {
             $countrystr = addslashes_js(get_string($cou, 'countries'));
             foreach ($cities as $city) {
                 $citystr = addslashes_js(trim(preg_replace('/[0-9]+/', '', $city->city)));
-                $rows[] = "{c:[{v:'$citystr'}, {v:$city->cnt}, {v:'$countrystr'}]}";
+                $rows[] = "{c:[{v:'$citystr'}, {v:$city->cnt}, {v:'$city->cnt ($countrystr)'}]}";
             }
             $rows = implode(',', $rows);
         }
@@ -81,8 +88,7 @@ if ($cou != '') {
 } else if ($map === 1) {
     $cols = "{type: 'string'}, {type: 'number'}, { type: 'string', 'role': 'tooltip'}";
     $cou = strtoupper($cou);
-    $sql = "SELECT city, count(1) AS cnt, country FROM {user} WHERE city > '' AND suspended = 0
-                AND deleted = 0 GROUP BY city";
+    $sql = "SELECT city, count(1) AS cnt, country FROM {user} WHERE city > '' GROUP BY city";
     if ($cities = $DB->get_records_sql($sql)) {
         foreach ($cities as $city) {
             $countrystr = addslashes_js(get_string($city->country, 'countries'));
@@ -132,5 +138,9 @@ if ($cou != '') {
     }
     $opt = "'showTip': true, 'mapType' : 'terrain', 'zoomLevel': 2, 'colorAxis': {'colors': ['#B5C202', '#106B52']}";
 }
-echo iplus_gchart($char, $sty, $cols, $rows, $opt);
+if ($sids != '') {
+    echo iplus_gchart($char, $sty, $cols, $rows, $opt);  //, $sids, 'blocks/online_users_map/index.php?country=');
+} else {
+   echo iplus_gchart($char, $sty, $cols, $rows, $opt);
+}
 echo $OUTPUT->footer();
