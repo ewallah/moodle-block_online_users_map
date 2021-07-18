@@ -154,4 +154,3 @@ if ($pusers = $DB->get_records_sql($sqlwithll, array(), 0, 500)) {
 
 header("Content-type: text/javascript");
 echo $callback . "(" . json_encode($users) . ")";
-
