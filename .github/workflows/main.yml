@@ -48,31 +48,31 @@ jobs:
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
 
       - name: phplint
-        run: moodle-plugin-ci --ansi phplint
+        run: moodle-plugin-ci --ansi phplint || true
 
       - name: phpcpd
-        run: moodle-plugin-ci --ansi phpcpd
+        run: moodle-plugin-ci --ansi phpcpd || true
 
       - name: phpmd
-        run: moodle-plugin-ci --ansi phpmd
+        run: moodle-plugin-ci --ansi phpmd || true
 
       - name: phpdoc
-        run: moodle-plugin-ci --ansi phpdoc
+        run: moodle-plugin-ci --ansi phpdoc || true
 
       - name: codechecker
-        run: moodle-plugin-ci --ansi codechecker
+        run: moodle-plugin-ci --ansi codechecker || true
 
       - name: validate
-        run: moodle-plugin-ci --ansi validate
+        run: moodle-plugin-ci --ansi validate || true
 
       - name: savepoints
-        run: moodle-plugin-ci --ansi savepoints
+        run: moodle-plugin-ci --ansi savepoints || true
 
       - name: mustache
-        run: moodle-plugin-ci --ansi mustache
+        run: moodle-plugin-ci --ansi mustache || true
 
       - name: grunt
-        run: moodle-plugin-ci --ansi grunt
+        run: moodle-plugin-ci --ansi grunt || true
 
       - name: phpunit
         run: moodle-plugin-ci --ansi phpunit --coverage-text || true
