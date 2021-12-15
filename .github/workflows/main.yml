@@ -49,11 +49,11 @@ jobs:
 
       - name: phplint
         if: ${{ always() }}
-        run: moodle-plugin-ci --ansi phplint || true
+        run: moodle-plugin-ci --ansi phplint
 
-      - name: phpcpd
+      - name: phpcpd || true
         if: ${{ always() }}
-        run: moodle-plugin-ci --ansi phpcpd
+        run: moodle-plugin-ci --ansi phpcpd || true
 
       - name: phpmd
         if: ${{ always() }}
