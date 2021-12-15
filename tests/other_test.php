@@ -23,8 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace block_online_users_map;
 
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Unit tests for block_online_users_map/classes/privacy/policy
@@ -35,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers block_online_users_map
  */
-class block_online_users_map_other_testcase extends advanced_testcase {
+class other_test extends \advanced_testcase {
 
     /** @var user1 first user */
     private $user1;
@@ -50,24 +51,24 @@ class block_online_users_map_other_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
         $this->resetAfterTest(true);
-        $user = new stdClass();
+        $user = new \stdClass();
         $user->country = 'AU';
         $user->city = 'Perth';
         $user->lastip = '8.8.8.8';
         $this->user1 = self::getDataGenerator()->create_user($user);
-        $user = new stdClass();
+        $user = new \stdClass();
         $user->country = 'BE';
         $user->city = 'Brussel';
         $this->user2 = self::getDataGenerator()->create_user($user);
         update_users_locations();
         update_users_locations();
         $regions = ['region-a'];
-        $page = new moodle_page();
-        $page->set_context(context_system::instance());
+        $page = new \moodle_page();
+        $page->set_context(\context_system::instance());
         $page->set_pagetype('page-type');
         $page->set_subpage('');
-        $page->set_url(new moodle_url('/'));
-        $blockmanager = new block_manager($page);
+        $page->set_url(new \moodle_url('/'));
+        $blockmanager = new \block_manager($page);
         $blockmanager->add_regions($regions, false);
         $blockmanager->set_default_region($regions[0]);
         $blockmanager->add_block('online_users_map', 'region-a', 0, false);
@@ -105,12 +106,12 @@ class block_online_users_map_other_testcase extends advanced_testcase {
     public function test_other_course() {
         $course = self::getDataGenerator()->create_course();
         $regions = ['region-a'];
-        $page = new moodle_page();
-        $page->set_context(context_course::instance($course->id));
+        $page = new \moodle_page();
+        $page->set_context(\context_course::instance($course->id));
         $page->set_pagetype('page-type');
         $page->set_subpage('');
-        $page->set_url(new moodle_url('/'));
-        $blockmanager = new block_manager($page);
+        $page->set_url(new \moodle_url('/'));
+        $blockmanager = new \block_manager($page);
         $blockmanager->add_regions($regions, false);
         $blockmanager->set_default_region($regions[0]);
         $blockmanager->add_block('online_users_map', 'region-a', 0, false);
