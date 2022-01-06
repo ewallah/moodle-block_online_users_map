@@ -23,6 +23,9 @@
  * @author    Alex Little
  * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+
+// No login check
+// @codingStandardsIgnoreLine
 require('../../config.php');
 require_once($CFG->dirroot . '/theme/iplus/lib.php');
 
@@ -84,9 +87,9 @@ if ($cou != '') {
                 AND deleted = 0 GROUP BY city";
     if ($cities = $DB->get_records_sql($sql)) {
         foreach ($cities as $city) {
-            $countrystr = addslashes_js(get_string($city->country, 'countries'));
-            $citystr = addslashes_js(trim(preg_replace('/[0-9]+/', '', $city->city)));
-            $rows[] = "{c:[{v:'$citystr'}, {v:$city->cnt}, {v:'$countrystr'}]}";
+            $countryst = addslashes_js(get_string($city->country, 'countries'));
+            $cityst = addslashes_js(trim(preg_replace('/[0-9]+/', '', $city->city)));
+            $rows[] = "{c:[{v:'$cityst'}, {v:$city->cnt}, {v:'$countryst'}]}";
         }
         $rows = implode(',', $rows);
     }
@@ -97,8 +100,8 @@ if ($cou != '') {
             WHERE country > '' AND suspended = 0 AND deleted = 0 GROUP BY country";
     if ($countries = $DB->get_records_sql($sql)) {
         foreach ($countries as $country) {
-            $countrystr = addslashes_js(get_string($country->country, 'countries'));
-            $rows[] = "{c:[{v:'$country->country'}, {v:$country->cnt}, {v:'$countrystr $country->cnt'}]}";
+            $countryst = addslashes_js(get_string($country->country, 'countries'));
+            $rows[] = "{c:[{v:'$country->country'}, {v:$country->cnt}, {v:'$countryst $country->cnt'}]}";
         }
         $rows = implode(',', $rows);
     }

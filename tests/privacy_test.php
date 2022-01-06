@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_online_users_map\privacy;
+namespace block_online_users_map;
 
 use \core_privacy\tests\provider_testcase;
 use block_online_users_map\privacy\provider;
@@ -50,7 +50,7 @@ class privacy_test extends provider_testcase {
     /**
      * Basic setup for these tests.
      */
-    public function setUp():void {
+    public function setUp(): void {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
         $this->resetAfterTest(true);

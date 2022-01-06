@@ -24,6 +24,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
+// No login check
+// @codingStandardsIgnoreLine
 require('../../config.php');
 require_once($CFG->dirroot . '/theme/iplus/lib.php');
 
