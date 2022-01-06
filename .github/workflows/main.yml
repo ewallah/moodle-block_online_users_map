@@ -90,5 +90,5 @@ jobs:
         run: moodle-plugin-ci --ansi phpunit --coverage-text
 
       - name: behat
-        if: ${{ always() }}
+        if: ${{ matrix.moodle-branch != 'master'}}
         run: moodle-plugin-ci --ansi behat --profile=chrome
