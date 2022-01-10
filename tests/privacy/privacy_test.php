@@ -23,13 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_online_users_map;
+namespace block_online_users_map\privacy;
 
 use \core_privacy\tests\provider_testcase;
 use block_online_users_map\privacy\provider;
-
-defined('MOODLE_INTERNAL') || die();
-
 
 /**
  * Privacy tests for block_online_users_map

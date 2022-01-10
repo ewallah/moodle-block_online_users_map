@@ -34,8 +34,6 @@ use \core_privacy\local\request\writer;
 use \core_privacy\local\request\deletion_criteria;
 use \core_privacy\local\metadata\collection;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy provider class.
  *

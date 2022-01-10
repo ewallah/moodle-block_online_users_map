@@ -25,8 +25,6 @@
 
 namespace block_online_users_map;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for block_online_users_map/classes/privacy/policy
  *

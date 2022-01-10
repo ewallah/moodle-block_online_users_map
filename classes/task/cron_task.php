@@ -25,8 +25,6 @@
  */
 namespace block_online_users_map\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Simple task to run the block online users map cron.
  *
