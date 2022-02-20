@@ -85,7 +85,7 @@ class other_test extends \advanced_testcase {
         $this->assertFalse($this->block->instance_allow_config());
         $this->assertNotEmpty($this->block->title);
         $this->assertCount(2, $this->block->applicable_formats());
-        $this->assertEquals('', $this->block->get_content()->text);
+        $this->assertNotEquals('', $this->block->get_content()->text);
         $this->assertEquals('', $this->block->get_content()->footer);
 
         $this->setAdminUser();
@@ -94,7 +94,7 @@ class other_test extends \advanced_testcase {
         $this->assertFalse($this->block->instance_allow_config());
         $this->assertNotEmpty($this->block->title);
         $this->assertNotEmpty($this->block->applicable_formats());
-        $this->assertEquals('', $this->block->get_content()->text);
+        $this->assertNotEquals('', $this->block->get_content()->text);
         $this->assertEquals('', $this->block->get_content()->footer);
     }
 
@@ -117,7 +117,7 @@ class other_test extends \advanced_testcase {
         $blocks = $blockmanager->get_blocks_for_region('region-a');
         $block = $blocks[0];
         $this->assertNotEmpty($block->title);
-        $this->assertEquals('', $block->get_content()->text);
+        $this->assertNotEquals('', $block->get_content()->text);
         $this->assertEquals('', $block->get_content()->footer);
     }
 

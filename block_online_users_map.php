@@ -78,23 +78,14 @@ class block_online_users_map extends block_base {
     public function get_content() {
         global $COURSE;
 
-        if ($this->content !== null) {
-            //return $this->content;
-        }
-
         $this->content = new stdClass;
         $this->content->text = get_html_googlemap();
         $this->content->footer = '';
 
-        if (empty($this->instance)) {
-            return $this->content;
-        }
         if ($COURSE->id == SITEID) {
             if ($this->instance->visible) {
                 $this->page->requires->js(new moodle_url('https://www.google.com/jsapi'), true);
             }
-        } else {
-            $this->content->text = get_html_googlemap();
         }
         return $this->content;
     }
