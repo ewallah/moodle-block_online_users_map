@@ -79,11 +79,11 @@ class block_online_users_map extends block_base {
         global $COURSE;
 
         if ($this->content !== null) {
-            return $this->content;
+            //return $this->content;
         }
 
         $this->content = new stdClass;
-        $this->content->text = '';
+        $this->content->text = get_html_googlemap();
         $this->content->footer = '';
 
         if (empty($this->instance)) {
