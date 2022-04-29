@@ -32,7 +32,6 @@ namespace block_online_users_map;
  * @category   test
  * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers block_online_users_map
  */
 class other_test extends \advanced_testcase {
 
@@ -78,6 +77,7 @@ class other_test extends \advanced_testcase {
 
     /**
      * Test basic block.
+     * @covers \block_online_users_map
      */
     public function test_block_basic() {
         $this->assertFalse($this->block->instance_allow_multiple());
@@ -100,6 +100,7 @@ class other_test extends \advanced_testcase {
 
     /**
      * Test other course.
+     * @covers \block_online_users_map
      */
     public function test_other_course() {
         $course = self::getDataGenerator()->create_course();
