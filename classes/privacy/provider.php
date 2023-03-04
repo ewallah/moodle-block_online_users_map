@@ -55,10 +55,10 @@ class provider implements \core_privacy\local\metadata\provider,
      */
     public static function get_metadata(collection $collection) : collection {
         $arr = [
-            'userid'  => 'privacy:metadata:block_online_users_map:userid',
-            'lat'     => 'privacy:metadata:block_online_users_map:lat',
-            'lng'     => 'privacy:metadata:block_online_users_map:lng',
-            'city'    => 'privacy:metadata:block_online_users_map:city',
+            'userid' => 'privacy:metadata:block_online_users_map:userid',
+            'lat' => 'privacy:metadata:block_online_users_map:lat',
+            'lng' => 'privacy:metadata:block_online_users_map:lng',
+            'city' => 'privacy:metadata:block_online_users_map:city',
             'country' => 'privacy:metadata:block_online_users_map:country'];
         $collection->add_database_table('block_online_users_map', $arr, 'privacy:metadata:block_online_users_map');
         return $collection;

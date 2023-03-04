@@ -79,11 +79,12 @@ class block_online_users_map extends block_base {
         global $COURSE;
 
         $this->content = new stdClass;
-        $this->content->text = get_html_googlemap();
+        $this->content->text = '';
         $this->content->footer = '';
 
         if ($COURSE->id == SITEID) {
             if ($this->instance->visible) {
+                $this->content->text = get_html_googlemap();
                 $this->page->requires->js(new moodle_url('https://www.google.com/jsapi'), true);
             }
         }
