@@ -27,7 +27,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_online_users_map';
-$plugin->version = 2022110700;
 $plugin->requires = 2022041900;
-$plugin->release = 'v4.0.1';
+$plugin->supported = [401, 402];
 $plugin->maturity = MATURITY_STABLE;
+$plugin->release = '..1';
+$plugin->version = 2023042400;
