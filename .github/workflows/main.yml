@@ -25,13 +25,20 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, mysqli, gd, zip
           ini-values: max_input_vars=5000
-          coverage: xdebug
+          coverage: pcov
+
+      - name: npm cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-${{ matrix.php }}-${{ matrix.moodle-branch }}-${{ matrix.database }}-cache
+          restore-keys: |
+            node-${{ matrix.php }}-${{ matrix.moodle-branch }}-${{ matrix.database }}-cache
 
       - name: composer
         run: |
-           composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci dev-master
+           composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
            echo $(cd ci/bin; pwd) >> $GITHUB_PATH
            echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
            sudo locale-gen en_AU.UTF-8
