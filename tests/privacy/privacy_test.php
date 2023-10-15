@@ -25,7 +25,7 @@
 
 namespace block_online_users_map\privacy;
 
-use \core_privacy\tests\provider_testcase;
+use core_privacy\tests\provider_testcase;
 use block_online_users_map\privacy\provider;
 
 /**

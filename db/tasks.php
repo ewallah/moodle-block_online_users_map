@@ -27,4 +27,4 @@
 defined('MOODLE_INTERNAL') || die();
 
 $tasks = [['classname' => '\block_online_users_map\task\cron_task', 'blocking' => 0, 'minute' => '17', 'hour' => '*', 'day' => '*',
-           'dayofweek' => '*', 'month' => '*']];
+           'dayofweek' => '*', 'month' => '*', ], ];

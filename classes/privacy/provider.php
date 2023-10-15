@@ -26,13 +26,13 @@
 
 namespace block_online_users_map\privacy;
 
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\deletion_criteria;
-use \core_privacy\local\metadata\collection;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\local\request\userlist;
+use core_privacy\local\request\writer;
+use core_privacy\local\request\deletion_criteria;
+use core_privacy\local\metadata\collection;
 
 /**
  * Privacy provider class.
@@ -59,7 +59,7 @@ class provider implements \core_privacy\local\metadata\provider,
             'lat' => 'privacy:metadata:block_online_users_map:lat',
             'lng' => 'privacy:metadata:block_online_users_map:lng',
             'city' => 'privacy:metadata:block_online_users_map:city',
-            'country' => 'privacy:metadata:block_online_users_map:country'];
+            'country' => 'privacy:metadata:block_online_users_map:country', ];
         $collection->add_database_table('block_online_users_map', $arr, 'privacy:metadata:block_online_users_map');
         return $collection;
     }
