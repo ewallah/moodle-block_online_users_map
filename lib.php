@@ -145,7 +145,7 @@ function update_users_locations() {
     global $DB;
     // Get all the users without a lat/lng.
     $sql = "SELECT u.id, u.city, u.lastip, u.country, u.timezone, boumc.id AS b_id, u.firstname, u.lastname FROM {user} u
-   LEFT OUTER JOIN {block_online_users_map} boumc ON  u.id = boumc.userid
+   LEFT OUTER JOIN {block_online_users_map} boumc ON u.id = boumc.userid
              WHERE (boumc.id IS NULL OR u.city != boumc.city OR u.country != boumc.country)
                AND u.lastip != '' AND u.city != '' AND u.suspended = 0 AND u.deleted = 0";
 
@@ -155,6 +155,18 @@ function update_users_locations() {
     }
     // Loop through results and get location for each user.
     foreach ($results as $user) {
+        $new = local_ucwords($user->firstname);
+        if ($user->firstname != $new) {
+            $DB->set_field('user', 'firstname', $new, ['id' => $user->id]);
+        }
+        $new = local_ucwords($user->lastname);
+        if ($user->lastname != $new) {
+            $DB->set_field('user', 'lastname', $new, ['id' => $user->id]);
+        }
+        $new = local_ucwords($user->city);
+        if ($user->city != $new) {
+            $DB->set_field('user', 'city', $new, ['id' => $user->id]);
+        }
         // Get the coordinates.
         $boumc = new stdClass;
         if ((PHPUNIT_TEST) || (defined('BEHAT_TEST') && BEHAT_TEST) || defined('BEHAT_SITE_RUNNING')) {
@@ -186,6 +198,7 @@ function update_users_locations() {
                     $arr[] = 'Location updated';
                 } else {
                     $DB->insert_record('block_online_users_map', $boumc);
+
                     $arr[] = 'Location added';
                     $names = [$user->firstname, $user->lastname];
                     $fields = ['firstname', 'lastname'];
@@ -372,4 +385,22 @@ function phptojson($objects, $name, $callback='') {
 function puserlnk($user) {
     $url = new \moodle_url('/user/editadvanced.php', ['id' => $user->id]);
     return "$url $user->firstname $user->lastname";
+}
+
+/**
+ * Modify use of capitals
+ *
+ * @param string $str string to be checked
+ * @return string
+ */
+function local_ucwords($str) {
+    $lo = strtolower($str);
+    $up = strtoupper($str);
+    if ($lo === $str) {
+        return ucwords($up);
+    }
+    if ($up === $str) {
+        return ucwords($lo);
+    }
+    return ucwords($lo);
 }

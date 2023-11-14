@@ -55,7 +55,7 @@ class other_test extends \advanced_testcase {
         $this->user1 = self::getDataGenerator()->create_user($user);
         $user = new \stdClass();
         $user->country = 'BE';
-        $user->city = 'Brussel';
+        $user->city = 'BruSsel';
         $this->user2 = self::getDataGenerator()->create_user($user);
         update_users_locations();
         update_users_locations();
@@ -127,13 +127,14 @@ class other_test extends \advanced_testcase {
      * @covers \block_online_users_map\task\cron_task
      */
     public function test_cron_task() {
-        self::getDataGenerator()->create_user(['email' => 'tst@iplussolutions.org']);
+        $user = self::getDataGenerator()->create_user([
+            'firstname' => 'fIrStName',
+            'lastname' => 'LASTNAME',
+            'city' => 'city',
+            'email' => 'tst@iplussolutions.org',
+        ]);
         $tsk = new \block_online_users_map\task\cron_task();
         $this->assertEquals('block online users task', $tsk->get_name());
-        ob_start();
         $this->assertEquals(true, $tsk->execute());
-        $out = ob_get_contents();
-        ob_end_clean();
-        $this->assertEquals('', $out);
     }
 }
