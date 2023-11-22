@@ -394,13 +394,8 @@ function puserlnk($user) {
  * @return string
  */
 function local_ucwords($str) {
-    $lo = strtolower($str);
-    $up = strtoupper($str);
-    if ($lo === $str) {
-        return ucwords($up);
+    if (strtoupper($str) === $str || strtolower($str) === $str) {
+        return ucwords($str);
     }
-    if ($up === $str) {
-        return ucwords($lo);
-    }
-    return ucwords($lo);
+    return $str;
 }
