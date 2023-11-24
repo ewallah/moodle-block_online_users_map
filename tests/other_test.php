@@ -79,7 +79,7 @@ class other_test extends \advanced_testcase {
      * Test basic block.
      * @covers \block_online_users_map
      */
-    public function test_block_basic() {
+    public function test_block_basic(): void {
         $this->assertFalse($this->block->instance_allow_multiple());
         $this->assertTrue($this->block->has_config());
         $this->assertFalse($this->block->instance_allow_config());
@@ -102,7 +102,7 @@ class other_test extends \advanced_testcase {
      * Test other course.
      * @covers \block_online_users_map
      */
-    public function test_other_course() {
+    public function test_other_course(): void {
         $course = self::getDataGenerator()->create_course();
         $regions = ['region-a'];
         $page = new \moodle_page();
@@ -126,7 +126,7 @@ class other_test extends \advanced_testcase {
      * Test cron.
      * @covers \block_online_users_map\task\cron_task
      */
-    public function test_cron_task() {
+    public function test_cron_task(): void {
         $user = self::getDataGenerator()->create_user([
             'firstname' => 'fIrStName',
             'lastname' => 'LASTNAME',

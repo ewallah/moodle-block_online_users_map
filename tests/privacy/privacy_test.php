@@ -84,7 +84,7 @@ class privacy_test extends provider_testcase {
      * Test returning metadata.
      * @covers \block_online_users_map\privacy\provider
      */
-    public function test_get_metadata() {
+    public function test_get_metadata(): void {
         $collection = new \core_privacy\local\metadata\collection('block_online_users_map');
         $collection = \block_online_users_map\privacy\provider::get_metadata($collection);
         $this->assertNotEmpty($collection);
@@ -94,7 +94,7 @@ class privacy_test extends provider_testcase {
      * Test getting the context for the user ID related to this plugin.
      * @covers \block_online_users_map\privacy\provider
      */
-    public function test_get_contexts_for_userid() {
+    public function test_get_contexts_for_userid(): void {
         $contextlist = \block_online_users_map\privacy\provider::get_contexts_for_userid($this->user1->id);
         $this->assertNotEmpty($contextlist);
         $contextlist = \block_online_users_map\privacy\provider::get_contexts_for_userid($this->user2->id);
@@ -105,7 +105,7 @@ class privacy_test extends provider_testcase {
      * Check the exporting of locations for a user.
      * @covers \block_online_users_map\privacy\provider
      */
-    public function test_export_maps() {
+    public function test_export_maps(): void {
         $context = \context_user::instance($this->user1->id);
         $this->export_context_data_for_user($this->user1->id, $context, 'block_online_users_map');
         $writer = \core_privacy\local\request\writer::with_context($context);
@@ -120,7 +120,7 @@ class privacy_test extends provider_testcase {
      * Tests the deletion of all locations.
      * @covers \block_online_users_map\privacy\provider
      */
-    public function test_delete_maps_for_all_users_in_context() {
+    public function test_delete_maps_for_all_users_in_context(): void {
         $context = \context_user::instance($this->user1->id);
         \block_online_users_map\privacy\provider::delete_data_for_all_users_in_context($context);
         $list1 = new \core_privacy\tests\request\approved_contextlist($this->user1, 'block_online_users_map', []);
@@ -133,7 +133,7 @@ class privacy_test extends provider_testcase {
      * Tests deletion of locations for a specified user.
      * @covers \block_online_users_map\privacy\provider
      */
-    public function test_delete_maps_for_user() {
+    public function test_delete_maps_for_user(): void {
         $context = \context_user::instance($this->user1->id);
         $list = new \core_privacy\tests\request\approved_contextlist($this->user1, 'block_online_users_map', []);
         \block_online_users_map\privacy\provider::delete_data_for_user($list);
@@ -150,7 +150,7 @@ class privacy_test extends provider_testcase {
      * Tests new functions.
      * @covers \block_online_users_map\privacy\provider
      */
-    public function test_new_functions() {
+    public function test_new_functions(): void {
         $context = \context_user::instance($this->user1->id);
         $userlist = new \core_privacy\local\request\userlist($context, 'block_online_users_map');
         provider::get_users_in_context($userlist);
