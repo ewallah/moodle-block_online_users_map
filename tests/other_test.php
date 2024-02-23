@@ -44,7 +44,7 @@ class other_test extends \advanced_testcase {
     /**
      * Basic setup for these tests.
      */
-    public function setUp():void {
+    public function setUp(): void {
         global $CFG;
         require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
         $this->resetAfterTest(true);
