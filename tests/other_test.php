@@ -33,7 +33,7 @@ namespace block_online_users_map;
  * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class other_test extends \advanced_testcase {
+final class other_test extends \advanced_testcase {
 
     /** @var user1 first user */
     private $user1;
@@ -127,7 +127,7 @@ class other_test extends \advanced_testcase {
      * @covers \block_online_users_map\task\cron_task
      */
     public function test_cron_task(): void {
-        $user = self::getDataGenerator()->create_user([
+        self::getDataGenerator()->create_user([
             'firstname' => 'fIrStName',
             'lastname' => 'LASTNAME',
             'city' => 'city',
