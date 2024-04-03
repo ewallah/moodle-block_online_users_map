@@ -27,7 +27,7 @@
 // No login check
 // @codingStandardsIgnoreLine
 require_once("../../config.php");
-require_once($CFG->dirroot.'/blocks/online_users_map/lib.php');
+require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
 
 $callback = optional_param('callback', '', PARAM_ALPHA);
 
@@ -35,7 +35,7 @@ $callback = optional_param('callback', '', PARAM_ALPHA);
 $timefrom = 100 * floor((time() - gettimetoshowusers()) / 100);
 
 // Get context so we can check capabilities.
-$context = context_course::instance( $COURSE->id);
+$context = context_course::instance($COURSE->id);
 
 // Calculate if we are in separate groups.
 $isseparategroups = ($COURSE->groupmode == SEPARATEGROUPS
@@ -66,7 +66,7 @@ if (isset($CFG->block_online_users_map_show_offline) && $CFG->block_online_users
         $order = "ORDER BY lastaccess DESC ";
     } else {
         // Course-level.
-        $courseselect = "AND ul.courseid = '".$COURSE->id."'";
+        $courseselect = "AND ul.courseid = '" . $COURSE->id . "'";
         $select = "SELECT
             u.id, u.username, u.firstname, u.lastname, u.city, MAX(u.lastaccess) as lastaccess, boumc.lat, boumc.lng ";
         $from = "FROM {user_lastaccess} ul,
@@ -118,7 +118,7 @@ if ($COURSE->id == SITEID) {
     $order = "ORDER BY lastaccess DESC";
 } else {
     // Course-level.
-    $courseselect = "AND ul.courseid = '".$COURSE->id."'";
+    $courseselect = "AND ul.courseid = '" . $COURSE->id . "'";
     $select = "SELECT u.id, u.username, u.firstname, u.lastname, u.city, MAX(u.lastaccess) as lastaccess, boumc.lat, boumc.lng ";
     $from = "FROM {user_lastaccess} ul,
                   {user} u,

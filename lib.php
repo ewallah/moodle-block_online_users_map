@@ -25,7 +25,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/lib/datalib.php');
+require_once($CFG->dirroot . '/lib/datalib.php');
 
 /**
  * Get the current user location.
@@ -130,7 +130,8 @@ function getuserlocations($limit = 1500) {
  */
 function get_html_googlemap() {
     global $CFG;
-    $str = "<script src='https://maps.googleapis.com/maps/api/js?&key=".$CFG->googlemapkey3."' type='text/javascript'></script>";
+    $str = "<script src='https://maps.googleapis.com/maps/api/js?&key=" . $CFG->googlemapkey3;
+    $str .= "' type='text/javascript'></script>";
     $str .= "<div id='block_online_users_googlemap'></div>";
     $str .= "<script type='text/javascript' src='" . $CFG->wwwroot;
     $str .= "/blocks/online_users_map/online_users_map.php' defer='defer'></script>";
@@ -168,7 +169,7 @@ function update_users_locations() {
             $DB->set_field('user', 'city', $new, ['id' => $user->id]);
         }
         // Get the coordinates.
-        $boumc = new stdClass;
+        $boumc = new stdClass();
         if ((PHPUNIT_TEST) || (defined('BEHAT_TEST') && BEHAT_TEST) || defined('BEHAT_SITE_RUNNING')) {
             $boumc->userid = $user->id;
             $boumc->lat = 33;
@@ -184,7 +185,7 @@ function update_users_locations() {
             $decode = json_decode($jsonresponse);
             if ($decode->status === 'success') {
                 $country = get_string($user->country, 'countries');
-                $lnk = puserlnk($user) . ': ' .$user->city . ' - ' . $country;
+                $lnk = puserlnk($user) . ': ' . $user->city . ' - ' . $country;
                 $arr = [$lnk, "\r\n", $user->lastip, $user->id, $user->b_id, $decode->country, $decode->countryCode,
                         $decode->city, $decode->zip, $decode->lat, $decode->lon, $decode->timezone, "\r\n", ];
                 $boumc->userid = $user->id;
@@ -344,7 +345,7 @@ function getcurrentuserlocations() {
  * @param string $callback name of the callback function
  * @return string of the JSON object
  */
-function phptojson($objects, $name, $callback='') {
+function phptojson($objects, $name, $callback = '') {
     $str = '';
     if ($callback != '') {
         $str .= $callback . '(';
@@ -358,7 +359,7 @@ function phptojson($objects, $name, $callback='') {
             $str .= '{';
             $keys = array_keys($attr);
             for ($j = 0; $j < count($keys); $j++) {
-                $str .= '"' . $keys[$j] .'":"' . $attr[$keys[$j]] . '"';
+                $str .= '"' . $keys[$j] . '":"' . $attr[$keys[$j]] . '"';
                 if ($j != (count($keys) - 1)) {
                     $str .= ',';
                 }

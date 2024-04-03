@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 // No login check
 // @codingStandardsIgnoreLine
 require_once("../../config.php");
-require_once($CFG->dirroot.'/blocks/online_users_map/lib.php');
+require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
 ?>
 
 var map = null;

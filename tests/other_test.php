@@ -34,7 +34,6 @@ namespace block_online_users_map;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class other_test extends \advanced_testcase {
-
     /** @var user1 first user */
     private $user1;
     /** @var user2 second user */
@@ -72,7 +71,6 @@ final class other_test extends \advanced_testcase {
         $blockmanager->load_blocks();
         $blocks = $blockmanager->get_blocks_for_region('region-a');
         $this->block = $blocks[0];
-
     }
 
     /**

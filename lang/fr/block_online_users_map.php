@@ -24,21 +24,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-$string['pluginname'] = 'Carte des utilisateurs connectés';
-$string['title'] = 'D\'ou viennent nos etudiants';
-
 $string['centrelat'] = 'Latitude initiale';
 $string['centrelng'] = 'Longitude initiale';
 $string['centreuser'] = 'Centrer sur la localisation des utilisateurs';
-$string['debug'] = 'Montrer les messages de débogage';
-$string['googleapikey'] = 'Google Maps API clé';
-$string['namesonmap'] = 'Montrer les noms des utilisateurs';
-$string['offline'] = 'Montrer les utilisateurs hors ligne';
-$string['timetosee'] = 'Retirer après inactivité';
-$string['type'] = 'Type de carte à utiliser';
-$string['updatelimit'] = 'Emplacements maximums à mettre à jour';
-$string['zoomlevel'] = 'Niveau de zoom initial';
-
 $string['configcentrelat'] = 'Latitude centrale initiale sur la carte - en format décimal clair (pas en degrés/minutes)';
 $string['configcentrelng'] = 'Longitude centrale initiale sur la carte - en format décimal clair (pas en degrés/minutes)';
 $string['configcentreuser'] = 'Centrer la carte sur l’emplacement actuel des utilisateurs, avec le niveau de zoom ci-dessus. Ce paramètre est prioritaire sur les coordonnées lat/Ing ci-dessus, à moins que l’utilisateur actuel n’ait pas de localisation valide';
@@ -50,8 +38,17 @@ $string['configtimetosee'] = 'Nombre de minutes définissant la période d’ina
 $string['configtype'] = 'Sélectionner le fournisseur de carte à utiliser';
 $string['configupdatelimit'] = 'Nombre maximum d’emplacements à mettre à jour dans chaque cron - sans avoir d’impact sur l’exécution. Ceci doit être un nombre entier supérieur ou égal à 0. Lorsque ceci est paramétré à 0, tous les enregistrements seront mis à jour.';
 $string['configzoomlevel'] = 'Niveau de zoom initial de la carte';
-
-$string['periodnminutes'] = 'Dernières {$a} minutes';
-
+$string['debug'] = 'Montrer les messages de débogage';
+$string['googleapikey'] = 'Google Maps API clé';
+$string['namesonmap'] = 'Montrer les noms des utilisateurs';
+$string['offline'] = 'Montrer les utilisateurs hors ligne';
 $string['online_users_map:addinstance'] = 'Ajouter un nouveau bloc carte d’utilisateurs en ligne';
 $string['online_users_map:myaddinstance'] = 'Ajouter un nouveau bloc carte d’utilisateurs en ligne sur la page Mon Moodle';
+$string['periodnminutes'] = 'Dernières {$a} minutes';
+$string['pluginname'] = 'Carte des utilisateurs connectés';
+$string['timetosee'] = 'Retirer après inactivité';
+$string['title'] = 'D\'ou viennent nos etudiants';
+
+$string['type'] = 'Type de carte à utiliser';
+$string['updatelimit'] = 'Emplacements maximums à mettre à jour';
+$string['zoomlevel'] = 'Niveau de zoom initial';

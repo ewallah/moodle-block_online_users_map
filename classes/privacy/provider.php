@@ -26,12 +26,9 @@
 
 namespace block_online_users_map\privacy;
 
-use core_privacy\local\request\approved_contextlist;
-use core_privacy\local\request\contextlist;
-use core_privacy\local\request\approved_userlist;
-use core_privacy\local\request\userlist;
-use core_privacy\local\request\writer;
-use core_privacy\local\request\deletion_criteria;
+use core_privacy\local\request\{approved_contextlist, approved_userlist, contextlist, deletion_criteria, userlist, writer};
+use core_privacy\local\request\{core_userlist_provider};
+use core_privacy\local\request\plugin\provider as pluginprovider;
 use core_privacy\local\metadata\collection;
 
 /**
@@ -43,10 +40,7 @@ use core_privacy\local\metadata\collection;
  * @author  Alex Little
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-class provider implements \core_privacy\local\metadata\provider,
-                          \core_privacy\local\request\plugin\provider,
-                          \core_privacy\local\request\core_userlist_provider {
-
+class provider implements core_userlist_provider, pluginprovider, \core_privacy\local\metadata\provider {
     /**
      * Returns information about how block_community stores its data.
      *
@@ -146,7 +140,7 @@ class provider implements \core_privacy\local\metadata\provider,
         global $DB;
         $context = $userlist->get_context();
         if (is_a($context, \context_user::class)) {
-            list($insql, $inparams) = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
+            [$insql, $inparams] = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
             $DB->delete_records_select('block_online_users_map', "userid $insql", $inparams);
         }
     }

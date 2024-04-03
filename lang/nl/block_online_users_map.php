@@ -24,20 +24,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-$string['pluginname'] = 'Online Gebruikers';
-
 $string['centrelat'] = 'Start breedtegraad';
 $string['centrelng'] = 'Start lengtegraad';
 $string['centreuser'] = 'Centreer op gebruikers locatie';
-$string['debug'] = 'Toon debug meldingen';
-$string['googleapikey'] = 'Google Maps API sleutel';
-$string['namesonmap'] = 'Toon gebruikersnamen';
-$string['offline'] = 'Toon offline gebruikers';
-$string['timetosee'] = 'Verwijder na inactiviteit';
-$string['type'] = 'Type kaart';
-$string['updatelimit'] = 'Maximum locaties om te updaten';
-$string['zoomlevel'] = 'Begin zoom niveau';
-
 $string['configcentrelat'] = 'Start lengtegraad voor het centrum van de kaart - in decimaal formaat (geen graden/minuten)';
 $string['configcentrelng'] = 'Start breedtegraad voor het centrum van de kaart - in decimaal formaat (geen graden/minuten)';
 $string['configcentreuser'] = 'Centreer de kaart op de locatie van de huidige gebruiker, met het zoom percentage dat hierboven vermeld wordt. Deze instelling is prioritair t.o.v. de lengte/breedte coordinaten van hierboven.';
@@ -49,4 +38,14 @@ $string['configtimetosee'] = 'Aantal minuten inactiviteit die bepalen wanneer ee
 $string['configtype'] = 'Selecteer de kaart provider';
 $string['configupdatelimit'] = 'Maximum aantal locaties die worden geupdated in elke cron - zonder performantieverlies. Dit moet een integer getal zijn groter dan of gelijk aan 0. Bij 0 worden alle velden geupdated.';
 $string['configzoomlevel'] = 'Start zoomniveau van de kaart';
+$string['debug'] = 'Toon debug meldingen';
+$string['googleapikey'] = 'Google Maps API sleutel';
+$string['namesonmap'] = 'Toon gebruikersnamen';
+$string['offline'] = 'Toon offline gebruikers';
 $string['periodnminutes'] = 'laatste {$a} minuten';
+$string['pluginname'] = 'Online Gebruikers';
+
+$string['timetosee'] = 'Verwijder na inactiviteit';
+$string['type'] = 'Type kaart';
+$string['updatelimit'] = 'Maximum locaties om te updaten';
+$string['zoomlevel'] = 'Begin zoom niveau';

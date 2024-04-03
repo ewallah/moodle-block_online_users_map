@@ -37,7 +37,6 @@ use block_online_users_map\privacy\provider;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class privacy_test extends provider_testcase {
-
     /** @var user1 first user */
     private $user1;
     /** @var user2 second user */

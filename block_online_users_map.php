@@ -39,7 +39,6 @@ require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 class block_online_users_map extends block_base {
-
     /**
      * Core function used to initialize the block.
      */
@@ -78,7 +77,7 @@ class block_online_users_map extends block_base {
     public function get_content() {
         global $COURSE;
 
-        $this->content = new stdClass;
+        $this->content = new stdClass();
         $this->content->text = '';
         $this->content->footer = '';
 
