@@ -50,11 +50,6 @@ jobs:
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci --ansi phplint
 
-      - name: phpcpd || true
-        if: ${{ !cancelled() }}
-        continue-on-error: true
-        run: moodle-plugin-ci --ansi phpcpd
-
       - name: phpmd
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci --ansi phpmd
