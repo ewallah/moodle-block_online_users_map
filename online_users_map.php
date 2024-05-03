@@ -102,7 +102,9 @@ function loadMap(){
     
 } 
 
-
+/**
+ * Load the users.
+ */
 function loadUsers(){
     request = "<?php p($CFG->wwwroot); ?>/blocks/online_users_map/getusers.php?callback=loadUsersCallback";
     aObj = new JSONscriptRequest(request);
@@ -110,6 +112,9 @@ function loadUsers(){
     aObj.addScriptTag();
 }
 
+/**
+ * Load users callback.
+ */
 function loadUsersCallback(jData){
     if(!jData){
         return;
@@ -123,6 +128,9 @@ function loadUsersCallback(jData){
     }
 }
 
+/**
+ * Load the Google map.
+ */
 function createMarker(user){
     if (user.lat != "" && user.lng != ""){
         var point = new google.maps.LatLng(user.lat, user.lng);
