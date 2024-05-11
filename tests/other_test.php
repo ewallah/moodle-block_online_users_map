@@ -19,7 +19,7 @@
  *
  * @package    block_online_users_map
  * @category   test
- * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
+ * @copyright iplusacademy.org (www.iplusacademy.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ namespace block_online_users_map;
  *
  * @package    block_online_users_map
  * @category   test
- * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
+ * @copyright iplusacademy.org (www.iplusacademy.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class other_test extends \advanced_testcase {

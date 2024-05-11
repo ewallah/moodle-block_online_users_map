@@ -18,8 +18,8 @@
  * A scheduled task.
  *
  * @package   block_online_users_map
- * @copyright 2018 Renaat Debleu <rdebleu@eWallah.net>
- * @author    Renaat Debleu
+ * @copyright iplusacademy.org (www.iplusacademy.org)
+ * @author    Renaat Debleu <info@eWallah.net>
  * @author    Alex Little
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,8 +29,8 @@ namespace block_online_users_map\task;
  * Simple task to run the block online users map cron.
  *
  * @package   block_online_users_map
- * @copyright 2018 Renaat Debleu <rdebleu@eWallah.net>
- * @author    Renaat Debleu
+ * @copyright iplusacademy.org (www.iplusacademy.org)
+ * @author    Renaat Debleu <info@eWallah.net>
  * @author    Alex Little
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

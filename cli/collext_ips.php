@@ -18,8 +18,8 @@
  * This script checks online user map works.
  *
  * @package   block_online_users_map
- * @copyright 2019 onwards eWallah
- * @author    Renaat Debleu (www.ewallah.net)
+ * @copyright iplusacademy.org (www.iplusacademy.org)
+ * @author    Renaat Debleu <info@eWallah.net>
  * @author    Alex Little
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

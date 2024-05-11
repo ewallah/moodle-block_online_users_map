@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for block_online_users_map.
  *
  * @package block_online_users_map
- * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
+ * @copyright iplusacademy.org (www.iplusacademy.org)
  * @author  Renaat Debleu
  * @author  Alex Little
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
@@ -35,7 +35,7 @@ use core_privacy\local\metadata\collection;
  * Privacy provider class.
  *
  * @package block_online_users_map
- * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
+ * @copyright iplusacademy.org (www.iplusacademy.org)
  * @author  Renaat Debleu
  * @author  Alex Little
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License

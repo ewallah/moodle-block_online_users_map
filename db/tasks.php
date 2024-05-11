@@ -18,8 +18,8 @@
  * Task for online_users_map block
  *
  * @package   block_online_users_map
- * @copyright 2018 Renaat Debleu <rdebleu@eWallah.net>
- * @author    Renaat Debleu
+ * @copyright eWallah (www.eWallah.org)
+ * @author    Renaat Debleu <info@eWallah.net>
  * @author    Alex Little
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -19,7 +19,7 @@
  *
  * @package    block_online_users_map
  * @category   test
- * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
+ * @copyright iplusacademy.org (www.iplusacademy.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -33,7 +33,7 @@ use block_online_users_map\privacy\provider;
  *
  * @package    block_online_users_map
  * @category   test
- * @copyright  2018 Renaat Debleu <rdebleu@eWallah.net>
+ * @copyright iplusacademy.org (www.iplusacademy.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class privacy_test extends provider_testcase {
