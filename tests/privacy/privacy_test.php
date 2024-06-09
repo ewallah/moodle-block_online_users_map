@@ -48,6 +48,7 @@ final class privacy_test extends provider_testcase {
     public function setUp(): void {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
+        parent::setUp();
         $this->resetAfterTest(true);
         $datagenerator = $this->getDataGenerator();
         $user = new \stdClass();

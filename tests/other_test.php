@@ -46,6 +46,7 @@ final class other_test extends \advanced_testcase {
     public function setUp(): void {
         global $CFG;
         require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
+        parent::setUp();
         $this->resetAfterTest(true);
         $user = new \stdClass();
         $user->country = 'AU';
