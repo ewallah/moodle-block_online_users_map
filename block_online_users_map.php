@@ -21,7 +21,7 @@
  * @copyright iplusacademy.org (www.iplusacademy.org)
  * @author    Renaat Debleu <info@eWallah.net>
  * @author    Alex Little
- * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -36,7 +36,7 @@ require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
  * @copyright iplusacademy.org (www.iplusacademy.org)
  * @author    Renaat Debleu <info@eWallah.net>
  * @author    Alex Little
- * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_online_users_map extends block_base {
     /**

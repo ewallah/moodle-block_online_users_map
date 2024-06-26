@@ -21,7 +21,7 @@
  * @copyright iplusacademy.org (www.iplusacademy.org)
  * @author    Renaat Debleu <info@eWallah.net>
  * @author    Alex Little
- * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['centrelat'] = 'Latitude initiale';

@@ -20,8 +20,8 @@
  * @package block_online_users_map
  * @copyright iplusacademy.org (www.iplusacademy.org)
  * @author  Renaat Debleu
- * @author  Alex Little
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @author    Alex Little
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace block_online_users_map\privacy;
@@ -37,8 +37,8 @@ use core_privacy\local\metadata\collection;
  * @package block_online_users_map
  * @copyright iplusacademy.org (www.iplusacademy.org)
  * @author  Renaat Debleu
- * @author  Alex Little
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @author    Alex Little
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements core_userlist_provider, pluginprovider, \core_privacy\local\metadata\provider {
     /**

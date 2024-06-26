@@ -20,8 +20,8 @@
  * @package   block_online_users_map
  * @copyright iplusacademy.org (www.iplusacademy.org)
  * @author    Renaat Debleu <info@eWallah.net>
- * @author Alex Little
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @author    Alex Little
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 // No login check
