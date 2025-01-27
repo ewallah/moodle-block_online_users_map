@@ -76,7 +76,7 @@ final class other_test extends \advanced_testcase {
 
     /**
      * Test basic block.
-     * @covers \block_online_users_map
+     * #[CoversClass(block_online_users_map)]
      */
     public function test_block_basic(): void {
         $this->assertFalse($this->block->instance_allow_multiple());
@@ -99,7 +99,7 @@ final class other_test extends \advanced_testcase {
 
     /**
      * Test other course.
-     * @covers \block_online_users_map
+     * #[CoversClass(block_online_users_map)]
      */
     public function test_other_course(): void {
         $course = self::getDataGenerator()->create_course();
@@ -123,7 +123,7 @@ final class other_test extends \advanced_testcase {
 
     /**
      * Test cron.
-     * @covers \block_online_users_map\task\cron_task
+     * #[CoversClass(block_online_users_map\task\cron_task)]
      */
     public function test_cron_task(): void {
         self::getDataGenerator()->create_user([
