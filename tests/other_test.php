@@ -24,6 +24,7 @@
  */
 
 namespace block_online_users_map;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Unit tests for block_online_users_map/classes/privacy/policy
@@ -33,6 +34,7 @@ namespace block_online_users_map;
  * @copyright iplusacademy.org (www.iplusacademy.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[CoversClass(task\cron_task::class)]
 final class other_test extends \advanced_testcase {
     /** @var user1 first user */
     private $user1;
@@ -76,7 +78,6 @@ final class other_test extends \advanced_testcase {
 
     /**
      * Test basic block.
-     * @covers \block_online_users_map
      */
     public function test_block_basic(): void {
         $this->assertFalse($this->block->instance_allow_multiple());
@@ -99,7 +100,6 @@ final class other_test extends \advanced_testcase {
 
     /**
      * Test other course.
-     * @covers \block_online_users_map
      */
     public function test_other_course(): void {
         $course = self::getDataGenerator()->create_course();
@@ -123,7 +123,6 @@ final class other_test extends \advanced_testcase {
 
     /**
      * Test cron.
-     * @covers \block_online_users_map\task\cron_task
      */
     public function test_cron_task(): void {
         self::getDataGenerator()->create_user([

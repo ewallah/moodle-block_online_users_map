@@ -27,6 +27,7 @@ namespace block_online_users_map\privacy;
 
 use core_privacy\tests\provider_testcase;
 use block_online_users_map\privacy\provider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Privacy tests for block_online_users_map
@@ -36,6 +37,7 @@ use block_online_users_map\privacy\provider;
  * @copyright iplusacademy.org (www.iplusacademy.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[CoversClass(provider::class)]
 final class privacy_test extends provider_testcase {
     /** @var user1 first user */
     private $user1;
@@ -82,7 +84,6 @@ final class privacy_test extends provider_testcase {
 
     /**
      * Test returning metadata.
-     * @covers \block_online_users_map\privacy\provider
      */
     public function test_get_metadata(): void {
         $collection = new \core_privacy\local\metadata\collection('block_online_users_map');
@@ -92,7 +93,6 @@ final class privacy_test extends provider_testcase {
 
     /**
      * Test getting the context for the user ID related to this plugin.
-     * @covers \block_online_users_map\privacy\provider
      */
     public function test_get_contexts_for_userid(): void {
         $contextlist = \block_online_users_map\privacy\provider::get_contexts_for_userid($this->user1->id);
@@ -103,7 +103,6 @@ final class privacy_test extends provider_testcase {
 
     /**
      * Check the exporting of locations for a user.
-     * @covers \block_online_users_map\privacy\provider
      */
     public function test_export_maps(): void {
         $context = \context_user::instance($this->user1->id);
@@ -118,7 +117,6 @@ final class privacy_test extends provider_testcase {
 
     /**
      * Tests the deletion of all locations.
-     * @covers \block_online_users_map\privacy\provider
      */
     public function test_delete_maps_for_all_users_in_context(): void {
         $context = \context_user::instance($this->user1->id);
@@ -131,7 +129,6 @@ final class privacy_test extends provider_testcase {
 
     /**
      * Tests deletion of locations for a specified user.
-     * @covers \block_online_users_map\privacy\provider
      */
     public function test_delete_maps_for_user(): void {
         $context = \context_user::instance($this->user1->id);
@@ -148,7 +145,6 @@ final class privacy_test extends provider_testcase {
 
     /**
      * Tests new functions.
-     * @covers \block_online_users_map\privacy\provider
      */
     public function test_new_functions(): void {
         $context = \context_user::instance($this->user1->id);
