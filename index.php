@@ -90,7 +90,7 @@ if ($cou != '') {
 } else if ($map === 1) {
     $cols = "{type: 'string'}, {type: 'number'}, { type: 'string', 'role': 'tooltip'}";
     $cou = strtoupper($cou);
-    $sql = "SELECT city, count(1) AS cnt, country FROM {user} WHERE city > '' GROUP BY city";
+    $sql = "SELECT city, count(1) AS cnt, country FROM {user} WHERE city > '' GROUP BY city,country";
     if ($cities = $DB->get_records_sql($sql)) {
         foreach ($cities as $city) {
             $countrystr = addslashes_js(get_string($city->country, 'countries'));
@@ -116,8 +116,8 @@ if ($cou != '') {
 } else if ($map === 3) {
     $char = 'Map';
     $cols = "{type: 'number'}, {type: 'number'}, { type: 'string', 'role': 'tooltip'}";
-    $sql = "SELECT u.city, boumc.lat, boumc.lng FROM {user} u,  {block_online_users_map} boumc
-            WHERE boumc.userid = u.id AND u.suspended = 0 AND u.deleted = 0 GROUP BY city";
+    $sql = "SELECT u.city, AVG(boumc.lat) AS lat, AVG(boumc.lng) AS lng FROM {user} u,  {block_online_users_map} boumc
+            WHERE boumc.userid = u.id AND u.suspended = 0 AND u.deleted = 0 GROUP BY u.city";
     if ($cities = $DB->get_records_sql($sql, [], 0, 400)) {
         foreach ($cities as $city) {
             $citystr = addslashes_js(trim(preg_replace('/[0-9]+/', '', $city->city)));
@@ -129,8 +129,8 @@ if ($cou != '') {
 } else if ($map === 4) {
     $char = 'Map';
     $cols = "{type: 'number'}, {type: 'number'}, { type: 'string', 'role': 'tooltip'}";
-    $sql = "SELECT u.city, boumc.lat, boumc.lng FROM {user} u,  {block_online_users_map} boumc
-            WHERE boumc.userid = u.id AND u.suspended = 0 AND u.deleted = 0 GROUP BY city";
+    $sql = "SELECT u.city, AVG(boumc.lat) AS lat, AVG(boumc.lng) AS lng FROM {user} u,  {block_online_users_map} boumc
+            WHERE boumc.userid = u.id AND u.suspended = 0 AND u.deleted = 0 GROUP BY u.city";
     if ($cities = $DB->get_records_sql($sql, [], 0, 400)) {
         foreach ($cities as $city) {
             $citystr = addslashes_js(trim(preg_replace('/[0-9]+/', '', $city->city)));
