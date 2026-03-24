@@ -21,7 +21,6 @@ Feature: The online users map block allow you to see who is currently online on 
       | blockname           | contextlevel | reference | pagetypepattern | defaultregion |
       | online_users_map    | System       | 1         | my-index        | side-post     |
 
-
   @javascript
   Scenario: Not view the online users block on the front page
     Given I log in as "admin"
