@@ -17,14 +17,15 @@ Feature: The online users map block allow you to see who is currently online on 
       | student1 | C1 | student        |
     And the following config values are set as admin:
       | googlemapkey3 | faketestkey |
+    And the following "blocks" exist:
+      | blockname           | contextlevel | reference | pagetypepattern | defaultregion |
+      | online_users_map    | System       | 1         | my-index        | side-post     |
+
 
   @javascript
   Scenario: Not view the online users block on the front page
     Given I log in as "admin"
     And I am on site homepage
-    And I turn editing mode on
-    And I add the "Online Users Map" block
-    And I add the "Online users" block
     Then I should see "Where our students come from"
     And I log out
     And I log in as "student1"
